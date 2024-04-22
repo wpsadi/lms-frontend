@@ -45,18 +45,19 @@ function SignIn() {
       toast.promise(
         (async () => {
           const push = await LoginUserApp({ ...form }); // Wait for createUserApp to complete
-          // console.log(push);
+          // //(push);
           if (push.status === 200) {
-            console.log(push.resp);
+            //(push.resp);
             
             action.updateUser({
+              
               name: push.resp.resp.prefs.firstname,
               user: push.resp.resp.email,
               verified: push.resp.resp.emailVerification,
               isLoggedIn: true,
             });
 
-            //   console.log("h")
+            //   //("h")
             navigate("/user");
             setCurrentSignIn(true);
             return Promise.resolve(); // Resolve the promise if createUserApp is successful
@@ -66,7 +67,7 @@ function SignIn() {
           }
         })(),
         {
-          loading: "Signing up...",
+          loading: "Signing in...",
           success:
             "Logged in",
           error: "Failed to sign up",

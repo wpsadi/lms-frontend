@@ -5,26 +5,26 @@ export async function createUserApp({
   name,
   email,
   password,
-  phone,
+  // phone,
   firstname,
   lastname,
 }) {
   try {
-    // console.log("hi")
-    const data = {
+    // //("hi")
+    /*const data = {
       name,
       email,
       password,
-      phone,
+      // phone,
       firstname,
       lastname,
-    };
+    };*/
 
-    console.log(data);
+    //(data);
     await account.create(ID.unique(), email, password, name);
-    // console.log("bye")
+    // //("bye")
      await account.createEmailPasswordSession(email, password);
-    await account.updatePhone(phone, password);
+    // await account.updatePhone(phone, password);
     await account.updatePrefs({
       firstname: firstname,
       lastname: lastname,
@@ -47,7 +47,7 @@ export async function createUserApp({
   }
 }
 
-// console.log(
+// //(
 //   await createUserApp({
 //     name: "tests",
 //     email: "john.c.calhoun@efefexampeefefefeflpetoutdde.com",

@@ -17,10 +17,10 @@ function App() {
   useEffect(() => {
     if (searchedOnce !== true) {
       (async () => {
-        // console.log("hi")
+        // //("hi")
         const getUser = await SetUpUser();
         if (getUser.status === 200) {
-          // console.log(getUser)
+          // //(getUser)
           action.updateUser({
             name:getUser.resp.prefs.firstname,
             user: getUser.resp.email,

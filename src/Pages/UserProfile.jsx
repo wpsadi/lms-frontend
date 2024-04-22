@@ -9,6 +9,8 @@ import { IoMdMail } from "react-icons/io";
 
 import { Link, useNavigate } from "react-router-dom";
 import { resendVerification } from "@/appwrite/user/createVerification";
+import { CiCircleInfo } from "react-icons/ci";
+import { SetUpUser } from "@/appwrite/user/getUserDetails";
 
 function UserProfile() {
   const userInfo = useSelector((state) => state.user);
@@ -36,6 +38,29 @@ function UserProfile() {
       document.getElementById("userModalClose").click();
     }
   }, [userInfo]);
+
+  const [loading, setLoading] = useState(false);
+  const [success,setSuccess] = useState(false);
+  const [data,setData] = useState({});
+
+  useEffect(() => {
+    if (userInfo.isLoggedIn === true) {
+      setLoading(true);
+      (async ()=>{
+        const user = await SetUpUser();
+        if (user.status === 200) {
+          setLoading(false);
+          setSuccess(true)
+          setData(user.resp)
+          //(user)
+        } else {
+          setLoading(false);
+          toast.error("Failed to get user details");
+        }
+      })()
+    }
+
+  }, [userInfo.isLoggedIn]);
 
   return (
     <>
@@ -121,42 +146,47 @@ function UserProfile() {
             <p className="py-4">
               {userInfo && !userInfo.isLoggedIn
                 ? "Please Login first"
-                : !userInfo.verified && (<>Please Verify your email first</>)}
+                : !userInfo.verified && <>Please Verify your email first</>}
             </p>
 
             <div className="modal-action">
               {userInfo && userInfo.isLoggedIn ? (
-                !userInfo.verified ? (<>
-                                  <button
-                    className="btn"
-                    onClick={async (evt) => {
-                      const resend = await resendVerification();
-                      if (resend.status === 200) {
-                        toast.success("Verification mail sent");
-                      }
-                      else{
-                        toast.error("Failed to send mail");
-                      }
+                !userInfo.verified ? (
+                  <>
+                    <button
+                      className="btn"
+                      onClick={async (evt) => {
+                        const resend = await resendVerification();
+                        if (resend.status === 200) {
+                          toast.success("Verification mail sent");
+                        } else {
+                          toast.error("Failed to send mail");
+                        }
 
-                      evt.target.classList.add("hidden")
-                      
-                    }}
-                  >
-                    Resend Mail {" "}
-                    <span>
-                    <IoMdMail className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                        aria-hidden="true"
-                       
+                        evt.target.classList.add("hidden");
+                      }}
+                    >
+                      Resend Mail{" "}
+                      <span>
+                        <IoMdMail
+                          className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          aria-hidden="true"
                         />
-                    </span>
-                  </button>
-                </>) : (<>
-                                <>
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn" id="userModalClose">Close</button>
-                  </form>
-                </></>)
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <>
+                      <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn" id="userModalClose">
+                          Close
+                        </button>
+                      </form>
+                    </>
+                  </>
+                )
               ) : (
                 <>
                   <button
@@ -189,6 +219,187 @@ function UserProfile() {
             </div>
           </div>
         </dialog>
+
+        {userInfo && userInfo.isLoggedIn && (loading === false) && (success===true) && (
+          <>
+            <div className=" w-full   mt-1  ">
+              <div className="flex flex-col place-items-center">
+                <div className="w-full  lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    User Profile
+                  </h2>
+                  <div className="mt-8 space-y-6" action="#">
+                    <div className="relative  h-10 flex items-center overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                      <svg
+                        className="absolute w-12 h-12 text-gray-400 -left-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                      <div className="pl-12 w-full  font-bold font-mono text-2xl text-black dark:text-white">
+                        {data.name}
+                      </div>
+                    </div>
+
+                    <div className="relative z-0 w-full mb-5 group">
+                      <input
+                        placeholder=""
+                        disabled
+                        type="email"
+                        name="floating_email"
+                        id="floating_email"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        required
+                      />
+                      <label
+                        htmlFor="floating_email"
+                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        Email address : <span className="text-black dark:text-gray-400 font-bold font-mono">{data.email}</span>
+                      </label>
+                    </div>
+                    {/*<div className="relative z-0 w-full mb-5 group">
+                      <input
+                        disabled
+                        type="password"
+                        name="floating_password"
+                        id="floating_password"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                      />
+                      <label
+                        htmlFor="floating_password"
+                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        Password
+                      </label>
+        </div>*/}
+                    {/*<div className="relative z-0 w-full mb-5 group">
+                      <input
+                        disabled
+                        type="password"
+                        name="repeat_password"
+                        id="floating_repeat_password"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                      />
+                      <label
+                        htmlFor="floating_repeat_password"
+                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        Confirm password
+                      </label>
+        </div>*/}
+                    <div className="grid md:grid-cols-2 md:gap-6">
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="text"
+                          disabled
+                          name="floating_first_name"
+                          id="floating_first_name"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                          placeholder=" "
+                          required
+                        />
+                        <label
+                          htmlFor="floating_first_name"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          First name : <span className="text-black dark:text-gray-400 font-bold font-mono">{data.prefs.firstname}</span>
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          disabled
+                          type="text"
+                          name="floating_last_name"
+                          id="floating_last_name"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                          placeholder=" "
+                          required
+                        />
+                        <label
+                          htmlFor="floating_last_name"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          Last name : <span className="text-black dark:text-gray-400 font-bold font-mono">{data.prefs.lastname? data.prefs.lastname:"---" }</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-1 md:gap-6">
+                      {/* <div className="relative z-0 w-full mb-5 group">
+                      <input
+                        type="tel"
+                        pattern="\+[0-9]{1,3}-[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        name="floating_phone"
+                        id="floating_phone"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                      />
+                      <label
+                        htmlFor="floating_phone"
+                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        Phone number (+91-123-456-7890)
+                      </label>
+                    </div> */}
+                      {/* <div className="relative z-0 w-full mb-5 group">
+                      <input
+                        type="text"
+                        name="floating_company"
+                        id="floating_company"
+                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" "
+                        required
+                      />
+                      <label
+                        htmlFor="floating_company"
+                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                      >
+                        Company (Ex. Google)
+                      </label>
+                    </div> */}
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="hidden g-recaptcha w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      data-sitekey="reCAPTCHA_site_key"
+                      data-callback="onSubmit"
+                      data-action="submit"
+                    >
+                      Sign Up
+                    </button>
+                    <div className="text-sm font-medium text-gray-600 dark:text-white hidden">
+                      <span className="flex items-center gap-2">
+                        <CiCircleInfo className="inline text-xl" /> Feel Free to
+                        Reach Out to Us in case of any issues.
+                      </span>
+                    </div>
+                    <div className="text-sm font-medium text-gray-900 dark:text-white hidden">
+                      Already Registered?{" "}
+                      <Link
+                        to="/signin"
+                        className="text-blue-600 hover:underline dark:text-blue-500"
+                      >
+                        Sign In here
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </DefaultLayout>
     </>
   );

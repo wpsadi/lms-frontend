@@ -3,7 +3,7 @@ import {account} from "@/appwrite/config.js"
 export async function SetUpUser(){
     try{
         const user = await account.get();
-        // console.log(user)
+        // //(user)
         return {
             status:200,
             resp:user

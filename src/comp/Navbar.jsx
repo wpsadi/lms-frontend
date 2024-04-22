@@ -11,11 +11,10 @@ import { FaPowerOff } from "react-icons/fa";
 
 // eslint-disable-next-line react/prop-types
 function NavbarF({ children }) {
-
   const userInfo = useSelector((state) => state.user);
 
   const { isShown, setIsShown } = useContext(Notice);
-  //    console.log(isShown)
+  //    //(isShown)
   return (
     <>
       <button
@@ -56,6 +55,31 @@ function NavbarF({ children }) {
                 <span className="ms-3">~LMS</span>
               </Link>
             </li>
+            <li>
+              <Link
+                to="/user"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white \  group"
+              >
+                <div className="relative w-full h-10 flex items-center overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                  <svg
+                    className="absolute w-12 h-12 text-gray-400 -left-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                  <div className="pl-12 w-full  font-bold font-mono text-2xl text-black dark:text-white">
+                    {userInfo.name}
+                  </div>
+                </div>
+              </Link>
+            </li>
+
             <li>
               <Link
                 to="/"
@@ -145,7 +169,7 @@ function NavbarF({ children }) {
                   </Link>
                 </li>
               </>
-            ) :             (
+            ) : (
               <>
                 <li>
                   <Link
@@ -153,7 +177,7 @@ function NavbarF({ children }) {
                     className="flex items-center p-2 text-red-500 rounded-lg  hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   >
                     <FaPowerOff className="w-5 h-5 text-red-500 transition duration-75 dark:text-red-400 " />
-                    
+
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Logout
                     </span>

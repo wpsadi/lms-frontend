@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 function SignUp() {
   const navigate = useNavigate();
-  const [currentSignUp,setCurrentSignUp] = useState(null); 
+  const [currentSignUp, setCurrentSignUp] = useState(null);
   const userInfo = useSelector((state) => state.user);
 
   // eslint-disable-next-line no-unused-vars
@@ -20,13 +20,12 @@ function SignUp() {
   }
 
   useEffect(() => {
-
     if (userInfo.isLoggedIn) {
-      if (currentSignUp !== true){
+      if (currentSignUp !== true) {
         // toast.error("You are already logged in");
-        null
+        null;
       }
-      
+
       navigate("/user");
     }
   });
@@ -42,7 +41,7 @@ function SignUp() {
       email: data.floating_email.toLowerCase().trim(),
       repeat: data.repeat_password.toLowerCase().trim(),
       password: data.floating_password.toLowerCase().trim(),
-      phone: data.floating_phone.toLowerCase().trim().split("-").join(""),
+      // phone: data.floating_phone.toLowerCase().trim().split("-").join(""),
       firstname: data.floating_first_name.toLowerCase().trim(),
       lastname: data.floating_last_name.toLowerCase().trim(),
     };
@@ -64,7 +63,7 @@ function SignUp() {
       toast.promise(
         (async () => {
           const push = await createUserApp({ ...form }); // Wait for createUserApp to complete
-          // console.log(push);
+          // //(push);
           if (push.status === 200) {
             action.updateUser({
               name: form.firstname,
@@ -72,7 +71,7 @@ function SignUp() {
               verified: false,
               isLoggedIn: true,
             });
-            setCurrentSignUp(true)
+            setCurrentSignUp(true);
             navigate("/user");
             return Promise.resolve(); // Resolve the promise if createUserApp is successful
           } else {
@@ -88,9 +87,8 @@ function SignUp() {
         }
       );
     } catch (error) {
-    
       console.error(error);
-      Promise.reject()
+      Promise.reject();
     }
   }
 
@@ -211,7 +209,7 @@ function SignUp() {
                     </div>
                   </div>
                   <div className="grid md:grid-cols-1 md:gap-6">
-                    <div className="relative z-0 w-full mb-5 group">
+                    {/* <div className="relative z-0 w-full mb-5 group">
                       <input
                         type="tel"
                         pattern="\+[0-9]{1,3}-[0-9]{3}-[0-9]{3}-[0-9]{4}"
@@ -227,7 +225,7 @@ function SignUp() {
                       >
                         Phone number (+91-123-456-7890)
                       </label>
-                    </div>
+                    </div> */}
                     {/* <div className="relative z-0 w-full mb-5 group">
                       <input
                         type="text"
@@ -249,10 +247,9 @@ function SignUp() {
                   <button
                     type="submit"
                     className="g-recaptcha w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                     
-                    data-sitekey="reCAPTCHA_site_key" 
-                    data-callback='onSubmit' 
-                    data-action='submit'
+                    data-sitekey="reCAPTCHA_site_key"
+                    data-callback="onSubmit"
+                    data-action="submit"
                   >
                     Sign Up
                   </button>

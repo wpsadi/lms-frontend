@@ -25,7 +25,7 @@ function DefaultLayout({children}){
     //             // Resolve or reject the promise based on the result
     //             // For example:
     //             setTimeout(() => {
-    //                 console.log(loading)
+    //                 //(loading)
     //                 if (!loading) {
     //                     resolve('success');
     //                 } else {

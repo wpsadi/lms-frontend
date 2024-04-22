@@ -4,16 +4,20 @@ import { updateUser } from "@/Redux/slices/userSlice";
 import { bindActionCreators } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 
 function VerifyEmail() {
   //   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user);
+  //(userInfo);
   const action = bindActionCreators({ updateUser }, dispatch);
 
+  const [loading,SetLoading] = useState(false);
+
   const [credAval, setCredAval] = useState(false);
+
+  const [once,setOnce] = useState(false);
 
   const [success, setSuccess] = useState(false);
 
@@ -22,69 +26,52 @@ function VerifyEmail() {
   const secret = query.get("secret");
   const userId = query.get("userId");
 
-  const verify = async () => {
-    try {
-      const push = await VerifyEmailApp({ userId, secret });
-      console.log(push);
-    //   if (push.status === 200) {
-    //     setSuccess(true);
-    //     // action.updateUser({
-    //     //   ...userInfo,
-    //     //   isLoggedIn: true,
-    //     // });
-    //     return 200;
-    //   } else {
-    //     return 400;
-    //   }
-    return 200
-    } catch (e) {
-      console.log(e.message)
-      return 400
-    //   Promise.reject();
-    }
-  }
-//   console.log(secret, userId);
-
-//   if (!!secret && !!userId) {
-//     setCredAval(true);
-//     toast.promise(async     ()=>{
-//         const push = await verify();
-//         if(push === 200){
-//             return Promise.resolve()
-//         }else{
-//             return Promise.reject()
-//         }
-//     }
-// ,
-//       {
-//         loading: "Verifying your email",
-//         success: "Email verified successfully",
-//         error: "Failed to verify email",
-//       }
-//     );
-//   }
-
-useEffect(()=>{
+  useEffect(() => {
     if (!!secret && !!userId) {
-        setCredAval(true);
-        toast.promise(async     ()=>{
-            const push = await verify();
-            if(push === 200){
-                return Promise.resolve()
-            }else{
-                return Promise.reject()
-            }
-        }
-    ,
-          {
-            loading: "Verifying your email",
-            success: "Email verified successfully",
-            error: "Failed to verify email",
-          }
-        );
-      }
-},[])
+      setCredAval(true);
+      
+      if (once === false){
+        toast.promise(
+          (async () => {
+            setOnce(true);
+            SetLoading(true);
+            try {
+              const push = await VerifyEmailApp({ userId, secret });
+              SetLoading(false);
+              //console.log(push);
+              if (push.status === 200) {
+                setSuccess(true);
+                action.updateUser({
+                  verified: true,
+                });
 
+                return new Promise.resolve()
+                 
+              } else {
+                setSuccess(false);
+                throw new Error(push.resp);
+              }
+            } catch (e) {
+              toast.error(e.message);
+              SetLoading(false);
+
+              return new Promise.reject(e);
+            }
+            
+          })(),
+          {
+            loading: 'loading ...',
+            success: "Email Verified",
+            error: "Unable to Verify",
+          }
+        ); 
+      }
+      
+    } else {
+      toast.error("Creds not found");
+    }
+  }, [userId, secret, action,once]);
+  
   return (
     <>
       <DefaultLayout>
@@ -100,20 +87,23 @@ useEffect(()=>{
               <div className="text-center px-3">
                 <h1 className="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
-                    {!credAval ? "401" : success ? "200" : "400"}
+                  {loading ? "Loading." : (!credAval ? "401" : (success ? "200" : "400"))}
+
                   </span>{" "}
-                  {!credAval
+                  {loading ? "---" : (!credAval ? "401" : (!credAval
                     ? "Creds. not Found"
                     : success
                     ? "Success"
-                    : "Failed"}
+                    : "Failed"))}
+
                 </h1>
                 <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
-                  {!credAval
+                {loading ? "Loading... ... ..." : (!credAval ? "401" : (!credAval
                     ? "Credentials not found. Please check your email for the verification link"
                     : success
                     ? "We have successfully verified your email address"
-                    : "Failed to verify to email. Creds. are invalid"}
+                    : "Failed to verify to email. Creds. are invalid"))}
+
                 </p>
               </div>
             </main>
