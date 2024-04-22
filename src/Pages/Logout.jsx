@@ -29,13 +29,13 @@ function LogoutUser() {
     const [currentLogout,setCurrentLogout] = useState(null);
     const navigate = useNavigate();
     useEffect(()=>{
-        if (!userInfo.isLoggedIn){
-            if (currentLogout !== true){
-                toast.error("You are not logged in")
-            }
-            navigate("/signin")
+      if (!userInfo.isLoggedIn){
+        if (currentLogout !== true){
+          toast.error("You are not logged in")
         }
-    },[])
+        navigate("/signin")
+      }
+    },[userInfo.isLoggedIn, currentLogout, navigate])
   return (
     <>
       <DefaultLayout>
