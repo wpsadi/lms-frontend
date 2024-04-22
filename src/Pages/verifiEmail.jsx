@@ -45,7 +45,7 @@ function VerifyEmail() {
                   verified: true,
                 });
 
-                return new Promise.resolve()
+                //return new Promise.resolve()
                  
               } else {
                 setSuccess(false);
