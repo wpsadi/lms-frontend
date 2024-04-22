@@ -90,7 +90,7 @@ function VerifyEmail() {
                   {loading ? "Loading." : (!credAval ? "401" : (success ? "200" : "400"))}
 
                   </span>{" "}
-                  {loading ? "---" : (!credAval ? "401" : (!credAval
+                  {loading ? "---" : ((!credAval
                     ? "Creds. not Found"
                     : success
                     ? "Success"
@@ -98,8 +98,8 @@ function VerifyEmail() {
 
                 </h1>
                 <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
-                {loading ? "Loading... ... ..." : (!credAval ? "401" : (!credAval
-                    ? "Credentials not found. Please check your email for the verification link"
+                {loading ? "Loading... ... ..." : ( (!credAval
+                    ? "Credentials not found. Please re-check your email for the verification link"
                     : success
                     ? "We have successfully verified your email address"
                     : "Failed to verify to email. Creds. are invalid"))}
