@@ -12,6 +12,8 @@ import { LoginUserApp } from "@/appwrite/user/createSession";
 function SignIn() {
   const navigate = useNavigate();
   const [currentSignIn, setCurrentSignIn] = useState(null);
+
+  const [isActive,setActive] = useState(false)
   const userInfo = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -56,12 +58,14 @@ function SignIn() {
               verified: push.resp.resp.emailVerification,
               isLoggedIn: true,
             });
+            setActive(false)
 
             //   //("h")
             navigate("/user");
             setCurrentSignIn(true);
             return Promise.resolve(); // Resolve the promise if createUserApp is successful
           } else {
+            setActive(false)
             toast.error(push.resp);
             return Promise.reject(); // Reject the promise if createUserApp fails
           }
@@ -101,6 +105,11 @@ function SignIn() {
                   action="#"
                   onSubmit={async (evt) => {
                     evt.preventDefault();
+
+                    if (isActive == true){
+                      return
+                    }
+
                     const formData = new FormData(evt.target); // Access the form's elements
 
                     // Convert formData to a plain object
@@ -109,6 +118,7 @@ function SignIn() {
                       formDataObject[key] = value;
                     });
 
+                    setActive(true)
                     await SignIn(formDataObject);
                   }}
                 >

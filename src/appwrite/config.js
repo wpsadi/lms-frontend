@@ -1,9 +1,11 @@
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, ID, Databases } from "appwrite";
 import { env } from "@/env";
 
 const client = new Client();
 
 const account = new Account(client);
+
+const dbs = new Databases(client);
 
 client
   .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
@@ -11,4 +13,4 @@ client
 
 
 
-export {account,client,ID}
+export {account,client,ID,dbs}

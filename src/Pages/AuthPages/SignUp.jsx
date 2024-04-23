@@ -14,6 +14,8 @@ function SignUp() {
   const [currentSignUp, setCurrentSignUp] = useState(null);
   const userInfo = useSelector((state) => state.user);
 
+  const [isActive,setActive] = useState(false)
+
   // eslint-disable-next-line no-unused-vars
   function onSubmit(token) {
     document.getElementById("user-sign-up").submit();
@@ -63,6 +65,7 @@ function SignUp() {
       toast.promise(
         (async () => {
           const push = await createUserApp({ ...form }); // Wait for createUserApp to complete
+          
           // //(push);
           if (push.status === 200) {
             action.updateUser({
@@ -71,10 +74,12 @@ function SignUp() {
               verified: false,
               isLoggedIn: true,
             });
+            setActive(false)
             setCurrentSignUp(true);
             navigate("/user");
             return Promise.resolve(); // Resolve the promise if createUserApp is successful
           } else {
+            setActive(false)
             toast.error(push.resp);
             return Promise.reject(); // Reject the promise if createUserApp fails
           }
@@ -116,6 +121,12 @@ function SignUp() {
                   onSubmit={async (evt) => {
                     evt.preventDefault();
                     const formData = new FormData(evt.target); // Access the form's elements
+
+                    if (isActive){
+                      return
+                    }
+
+                    setActive(true)
 
                     // Convert formData to a plain object
                     const formDataObject = {};
