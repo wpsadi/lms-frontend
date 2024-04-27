@@ -4,6 +4,7 @@ import Notice from "@/contexts/notice";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { Analytics } from "@vercel/analytics/react"
 import { fetchUser } from "./Redux/slices/userSlice";
 import "https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"
 
@@ -29,6 +30,7 @@ function App() {
         <Notice.Provider value={{ isShown, setIsShown }}>
           <CustomRoutes></CustomRoutes>
           <Toaster />
+          <Analytics/>
         </Notice.Provider>
       </BrowserRouter>
     </>

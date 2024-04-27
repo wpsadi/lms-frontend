@@ -68,7 +68,7 @@ function ContactUs() {
 
 
 
-              isActive(userInfo.all.prefs.raisedQuery != "false");
+              isActive(userInfo.all.prefs.raisedQuery);
               
               setOnce(true);
               setLoadingAllQueries(false);
