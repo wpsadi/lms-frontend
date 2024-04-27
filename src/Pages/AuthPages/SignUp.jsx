@@ -5,8 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import emailVal from "email-validator";
 import { createUserApp } from "@/appwrite/user/createAccount.js";
 import { useDispatch, useSelector } from "react-redux";
-import { bindActionCreators } from "@reduxjs/toolkit";
-import { logoutUser, updateUser } from "@/Redux/slices/userSlice";
+import { fetchUser,  } from "@/Redux/slices/userSlice";
 import { useEffect, useState } from "react";
 
 function SignUp() {
@@ -33,7 +32,6 @@ function SignUp() {
   });
 
   const dispatch = useDispatch();
-  const action = bindActionCreators({ updateUser, logoutUser }, dispatch);
   async function SignUp(data) {
     const form = {
       name: [
@@ -68,14 +66,15 @@ function SignUp() {
           
           // //(push);
           if (push.status === 200) {
-            action.updateUser({
-              all:push.resp,
-              firstname: push.resp.resp.prefs.firstname,
-              user: push.resp.resp.email,
-              verified: push.resp.resp.emailVerification,
-              isLoggedIn: true,
-              name:push.resp.name, 
-            });
+            // action.updateUser({
+            //   all:push.resp,
+            //   firstname: push.resp.resp.prefs.firstname,
+            //   user: push.resp.resp.email,
+            //   verified: push.resp.resp.emailVerification,
+            //   isLoggedIn: true,
+            //   name:push.resp.name, 
+            // });
+            dispatch(fetchUser())
             setActive(false)
             setCurrentSignUp(true);
             navigate("/user");
@@ -92,8 +91,11 @@ function SignUp() {
             "We have sent an email Verification link to your email address. Please verify your email address to continue.",
           error: "Failed to sign up",
         }
+        
       );
+      setActive(false)
     } catch (error) {
+      setActive(false)
       console.error(error);
       Promise.reject();
     }

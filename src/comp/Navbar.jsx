@@ -6,6 +6,7 @@ import { MdDashboard } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import Notice from "@/contexts/notice";
+import stringy from "string"
 import { useSelector } from "react-redux";
 import { FaBook } from "react-icons/fa";
 import { FaPowerOff } from "react-icons/fa";
@@ -75,7 +76,7 @@ function NavbarF({ children }) {
                     ></path>
                   </svg>
                   <div className="pl-12 w-full  font-bold font-mono text-2xl text-black dark:text-white">
-                    {userInfo.name? userInfo.firstname : "User"}
+                    {userInfo.name? stringy(userInfo.firstname).capitalize().s : "User"}
                   </div>
                 </div>
               </Link>

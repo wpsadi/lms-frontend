@@ -78,8 +78,10 @@ function SignIn() {
           error: "Failed to sign up",
         }
       );
+      setActive(false)
     } catch (error) {
         Promise.reject()
+        setActive(false)
       console.error(error);
     }
   }

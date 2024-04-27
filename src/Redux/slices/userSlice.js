@@ -50,6 +50,7 @@ const userSlice = createSlice({
       
       const newState = {
         ...state,
+        firstname : action.payload.prefs.firstname,
         name:action.payload.name,
         user: action.payload.user,
         verified: action.payload.verified,

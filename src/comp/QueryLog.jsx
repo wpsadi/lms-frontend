@@ -10,6 +10,13 @@ function QueryLogTable({ queries,reload }) {
     const [searchText,SetSearchText] = useState("")
     const [chosedFilter,setChosedFilter] = useState("all");
 
+    //   const limit = 3;
+
+  const [limit,setLimit] = useState(10);
+  const AvailLimts = [10,25,50]
+
+    const [isLimitUpdated,setIsLimitUpdated] = useState(false)
+
   const queriesStatusAttribute = [
     "all",
     "pending",
@@ -20,6 +27,12 @@ function QueryLogTable({ queries,reload }) {
 
   useEffect(()=>{
     let UpdatedData;
+
+    if (isLimitUpdated === true){
+        setStart(0)
+        setEnd(queries.documents.length >= limit ? limit : queries.documents.length%limit)
+        setIsLimitUpdated(false)
+    }
 
     
 
@@ -40,12 +53,12 @@ function QueryLogTable({ queries,reload }) {
     setData(UpdatedData)
 
 
-      },[searchText,chosedFilter,queries.documents])
+      },[searchText,chosedFilter,queries.documents,limit,isLimitUpdated])
 
 
   const [data,setData] = useState(queries.documents);
 //   console.log(data,queries)
-  const limit = 3;
+
 
   const [start,setStart] = useState(0);
   const  [end,setEnd] = useState(    start + (data.length-start >= limit ? limit : data.length%limit));
@@ -100,6 +113,25 @@ function QueryLogTable({ queries,reload }) {
               </div>
               <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                 <div className="flex gap-3 items-start">
+                <div className="flex items-center space-x-3 w-fit md:w-auto bg-red-500 rounded-md">
+                  <Dropdown
+                    label={`Limit : ${limit}`}
+                    className="rounded-md flex justify-center w-fit"
+                    dismissOnClick={true}
+                  >
+                    {AvailLimts.map((limitVal, index) => (
+                      <Dropdown.Item className="w-full" key={index} onClick={()=>{
+                            setLimit(limitVal)
+                            setIsLimitUpdated(true)
+                        
+
+                      }}>
+                        {limitVal}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown>
+                  
+                </div>
                 <div className="flex items-center space-x-3 w-fit md:w-auto bg-blue-500 rounded-md">
                   <Dropdown
                     label={`Filter${(()=>{
@@ -113,7 +145,7 @@ function QueryLogTable({ queries,reload }) {
                             })()}`  
                         }
                     })()}`}
-                    className="rounded-mdc flex justify-start "
+                    className="rounded-md flex justify-start "
                     dismissOnClick={true}
                   >
                     {queriesStatusAttribute.map((status, index) => (
@@ -133,6 +165,7 @@ function QueryLogTable({ queries,reload }) {
                   </Dropdown>
                   
                 </div>
+
                 <div className="flex items-center space-x-3 w-fit md:w-auto  rounded-md">
                 <button type="button" onClick={()=>{
                
@@ -295,7 +328,6 @@ function QueryLogTable({ queries,reload }) {
                 <li>
                     <button className="btn "
                     disabled={(()=>{
-                        console.log(data.length)
                         if (end>=data.length){
                             return true
                         }

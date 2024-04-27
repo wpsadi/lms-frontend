@@ -1,11 +1,12 @@
 import {account} from "@/appwrite/config.js";
 
+// eslint-disable-next-line no-unused-vars
 export async function UpdateUserQueryApp(queryStatus =  false) {
   try {
-
+    const existing = (await account.get()).prefs;
     const resp = await account.updatePrefs({
-        ...(await account.get()).prefs,
-      raisedQuery:queryStatus
+        ...existing,
+      raisedQuery: existing.raisedQuery ? false : true,
     });
     
     return {

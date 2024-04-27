@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { GoAlertFill } from "react-icons/go";
 import { RxReload } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
+import stringy from "string"
 import { IoMdMail } from "react-icons/io";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -272,7 +273,7 @@ function UserProfile() {
                         ></path>
                       </svg>
                       <div className="pl-12 w-full  font-bold font-mono text-2xl text-black dark:text-white">
-                        {data.name}
+                        {(data.name).toUpperCase()}
                       </div>
                     </div>
 
@@ -342,7 +343,7 @@ function UserProfile() {
                           htmlFor="floating_first_name"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          First name : <span className="text-black dark:text-gray-400 font-bold font-mono">{data.prefs.firstname}</span>
+                          First name : <span className="text-black dark:text-gray-400 font-bold font-mono">{data.prefs.firstname? stringy(data.prefs.firstname).capitalize().s:"---" }</span>
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -359,7 +360,7 @@ function UserProfile() {
                           htmlFor="floating_last_name"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          Last name : <span className="text-black dark:text-gray-400 font-bold font-mono">{data.prefs.lastname? data.prefs.lastname:"---" }</span>
+                          Last name : <span className="text-black dark:text-gray-400 font-bold font-mono">{data.prefs.lastname? stringy(data.prefs.lastname).capitalize().s:"---" }</span>
                         </label>
                       </div>
                     </div>
