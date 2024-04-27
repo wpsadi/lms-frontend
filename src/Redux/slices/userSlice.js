@@ -89,14 +89,23 @@ const userSlice = createSlice({
     }
   },
   extraReducers : (builder)=>{
-    builder.addCase(fetchUser.fulfilled, (state, action)=>{
-      state.firstname = action.payload.prefs.firstname;
-      state.name = action.payload.name;
-      state.user = action.payload.email;
-      state.isLoggedIn = true;
-      state.all = action.payload,
-      state.verified = action.payload.emailVerification;
-    })
+
+      builder.addCase(fetchUser.fulfilled, (state, action)=>{
+        try{
+          state.firstname = action.payload.prefs.firstname;
+          state.name = action.payload.name;
+          state.user = action.payload.email;
+          state.isLoggedIn = true;
+          state.all = action.payload,
+          state.verified = action.payload.emailVerification;
+        }
+        catch(e){
+          null
+        }
+
+      })
+    
+
   
   }
 });

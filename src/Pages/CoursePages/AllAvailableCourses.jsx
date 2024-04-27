@@ -27,12 +27,12 @@ const AllAvailableCourses = () => {
         dispatch(fetchUser(false));
         setCheckedUser(true);
       }
-      navigate("/userError", {
-        state: {
-          next: "/courses",
-        },
-      });
-      return;
+      // navigate("/userError", {
+      //   state: {
+      //     next: "/courses",
+      //   },
+      // });
+      // return;
     }
 
     dispatch(getAllCourses());
