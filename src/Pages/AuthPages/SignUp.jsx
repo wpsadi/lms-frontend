@@ -69,10 +69,12 @@ function SignUp() {
           // //(push);
           if (push.status === 200) {
             action.updateUser({
-              name: form.firstname,
-              user: form.email,
-              verified: false,
+              all:push.resp,
+              firstname: push.resp.resp.prefs.firstname,
+              user: push.resp.resp.email,
+              verified: push.resp.resp.emailVerification,
               isLoggedIn: true,
+              name:push.resp.name, 
             });
             setActive(false)
             setCurrentSignUp(true);

@@ -28,6 +28,7 @@ export async function createUserApp({
     await account.updatePrefs({
       firstname: firstname,
       lastname: lastname,
+      raisedQuery:false
     });
 
     await account.createVerification(env.emailVerificationURL);

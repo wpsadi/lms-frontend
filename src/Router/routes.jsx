@@ -10,6 +10,7 @@ import VerifyEmail from "@/Pages/AuthPages/verifiEmail";
 import { Routes,Route } from "react-router-dom";
 import AllAvailableCourses from "@/Pages/CoursePages/AllAvailableCourses";
 import UserRelatedError from "@/Pages/UserRelatedError";
+import IndividualCourse from "@/Pages/CoursePages/IndividualCourse";
 
 function CustomRoutes(){
     return (<>
@@ -31,6 +32,7 @@ function CustomRoutes(){
 
         {/* Courses Routes */}
         <Route path="/courses" element={<AllAvailableCourses/>} />
+        <Route path="/courses/:courseID" element={<IndividualCourse />} />
 
 
 

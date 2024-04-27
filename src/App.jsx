@@ -4,13 +4,11 @@ import Notice from "@/contexts/notice";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { SetUpUser } from "./appwrite/user/getUserDetails";
-import { bindActionCreators } from "@reduxjs/toolkit";
-import { updateUser } from "./Redux/slices/userSlice";
+import { fetchUser } from "./Redux/slices/userSlice";
+import "https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"
 
 function App() {
   const dispatch = useDispatch();
-  const action = bindActionCreators({updateUser},dispatch)
 
   const [searchedOnce, setSearchedOnce] = useState(null);
 
@@ -18,20 +16,11 @@ function App() {
     if (searchedOnce !== true) {
       (async () => {
         // //("hi")
-        const getUser = await SetUpUser();
-        if (getUser.status === 200) {
-          // //(getUser)
-          action.updateUser({
-            name:getUser.resp.prefs.firstname,
-            user: getUser.resp.email,
-            isLoggedIn:true,
-            verified: getUser.resp.emailVerification
-          })
-        }
+        dispatch(fetchUser(false))
         setSearchedOnce(true);
       })();
     }
-  }, [action, searchedOnce]);
+  }, [ searchedOnce, dispatch]);
 
   const [isShown, setIsShown] = useState(false);
   return (

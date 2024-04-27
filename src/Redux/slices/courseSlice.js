@@ -2,21 +2,24 @@ import { GetAllCoursesApp } from "@/appwrite/db/course/getAllCourses";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import toast from "react-hot-toast"
 
-export const getAllCourses = createAsyncThunk("course/all",async ()=>{
+export const getAllCourses = createAsyncThunk("course/all",async (raiseToast=true)=>{
     try{
         const allCourses = await GetAllCoursesApp();
-        toast.promise((async () => {
-            if(allCourses.status === 200){
-                Promise.resolve()
-            }else{
-                throw new Error(allCourses.resp)
-            }
-          })(),{
-            loading: 'Loading...',
-            success: 'Courses Loaded',
-            error: 'Failed to load courses'
-          
-          })
+        if(raiseToast){
+            toast.promise((async () => {
+                if(allCourses.status === 200){
+                    Promise.resolve()
+                }else{
+                    throw new Error(allCourses.resp)
+                }
+              })(),{
+                loading: 'Loading...',
+                success: 'Courses Loaded',
+                error: 'Failed to load courses'
+              
+              })
+        }
+
 
           return allCourses.resp;
 

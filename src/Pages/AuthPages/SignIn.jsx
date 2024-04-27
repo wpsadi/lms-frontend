@@ -52,11 +52,12 @@ function SignIn() {
             //(push.resp);
             
             action.updateUser({
-              
-              name: push.resp.resp.prefs.firstname,
+              all:push.resp,
+              firstname: push.resp.resp.prefs.firstname,
               user: push.resp.resp.email,
               verified: push.resp.resp.emailVerification,
               isLoggedIn: true,
+              name:push.resp.name, 
             });
             setActive(false)
 

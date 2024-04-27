@@ -83,6 +83,7 @@ function AboutUs(){
 
         
     </div>
+    
     </DefaultLayout>
 
 </section>

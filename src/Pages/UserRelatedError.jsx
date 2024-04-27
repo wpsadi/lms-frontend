@@ -26,25 +26,21 @@ function UserRelatedError() {
   //   const [once, setOnce] = useState(false);
   useEffect(() => {
     // const m_off = document.getElementById("user-modal-close");
-    if (userInfo.isLoggedIn === true) {
-      null;
-      // navigate("/signin")
-    }
     if (userInfo.verified === false) {
       toast.error("You need to verify your email first", {});
     }
-    if (userInfo.isLoggedIn === false) {
+    // if (userInfo.isLoggedIn === false) {
       document.getElementById("my_modal_1").showModal();
-    }
+    // }
 
     if (userInfo.isLoggedIn === true && userInfo.verified === true) {
       document.getElementById("userModalClose").click();
+      navigate(next)
     }
-  }, [userInfo]);
+  }, [userInfo,navigate,next]);
 
-  if (userInfo.isLoggedIn === true) {
-    navigate(next)
-    // console.log(userInfo)
+  if (userInfo.isLoggedIn === true && userInfo.verified === true) {
+    console.log(userInfo.isLoggedIn,userInfo.verified)
     return (
       <>
         <>
@@ -66,47 +62,45 @@ function UserRelatedError() {
         </div>
       </>
     );
-  } else {
-    return (
-      <>
-        <DefaultLayout>
+  } 
+
+  return (
+    <>
+      <DefaultLayout>
+        <>
+          <UserErrModal />
+        </>
+        {userInfo && !userInfo.isLoggedIn && (
           <>
-            <UserErrModal />
+            <div
+              role="alert"
+              className="py-5 alert alert-error text-white transition duration-75 "
+            >
+              <GoAlertFill />
+              <span>Please Login first</span>
+            </div>
           </>
-          {userInfo && !userInfo.isLoggedIn && (
+        )}
+
+        {userInfo && !userInfo.isLoggedIn !== true ? (
+          !userInfo.verified && (
             <>
+              <div className="mt-1"></div>
               <div
                 role="alert"
                 className="py-5 alert alert-error text-white transition duration-75 "
               >
                 <GoAlertFill />
-                <span>Please Login first</span>
+                <span>Email Not Verified</span>
               </div>
             </>
-          )}
-
-          {userInfo && !userInfo.isLoggedIn !== true ? (
-            !userInfo.verified && (
-              <>
-                <div className="mt-1"></div>
-                <div
-                  role="alert"
-                  className="py-5 alert alert-error text-white transition duration-75 "
-                >
-                  <GoAlertFill />
-                  <span>Email Not Verified</span>
-                </div>
-              </>
-            )
-          ) : (
-            <></>
-          )}
-        </DefaultLayout>
-      </>
-    );
-
-    // navigate(next)
-  }
+          )
+        ) : (
+          <></>
+        )}
+      </DefaultLayout>
+    </>
+  );
 }
 
 export default UserRelatedError;

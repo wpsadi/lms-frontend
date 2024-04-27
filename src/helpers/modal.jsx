@@ -1,13 +1,33 @@
 import { resendVerification } from "@/appwrite/user/createVerification";
+import { fetchUser } from "@/Redux/slices/userSlice";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { IoMdMail } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { RxReload } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 
 function UserErrModal(){
     const navigate = useNavigate()
-    const userInfo  = useSelector(state=>state.user)
+    const dispatch = useDispatch()
+    const [refetchUser,setRefetchUser] = useState(false)
+    const userInfo  = useSelector(state=>state.user);
+
+    useEffect(()=>{
+      if(refetchUser === true){
+        dispatch(fetchUser(true));
+        setRefetchUser(false)
+        try{
+          document.getElementById("Resend-btn").classList.remove("hidden");
+        }
+        catch(e){
+          null
+        }
+       
+      }
+    },[refetchUser,dispatch])
+
     return (<>
                 <button className="btn hidden">open modal</button>
             <dialog id="my_modal_1" className="modal">
@@ -23,7 +43,24 @@ function UserErrModal(){
               {userInfo && userInfo.isLoggedIn ? (
                 !userInfo.verified ? (
                   <>
+                                                        <button
+                      className="btn"
+                      onClick={async () => {
+                        if (refetchUser === false){
+                          setRefetchUser(true)
+                        }
+                      }}
+                    >
+                      Reload {" "}
+                      <span>
+                      <RxReload 
+                          className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </button>
                     <button
+                    id="Resend-btn"
                       className="btn"
                       onClick={async (evt) => {
                         const resend = await resendVerification();

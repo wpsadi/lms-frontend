@@ -4,24 +4,36 @@ import toast from "react-hot-toast";
 // import toast from "react-hot-toast";
 // import { FaHome } from "react-icons/fa";
 import { GoAlertFill } from "react-icons/go";
-import { useSelector } from "react-redux";
+import { RxReload } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
 import { IoMdMail } from "react-icons/io";
 
 import { Link, useNavigate } from "react-router-dom";
 import { resendVerification } from "@/appwrite/user/createVerification";
 import { CiCircleInfo } from "react-icons/ci";
 import { SetUpUser } from "@/appwrite/user/getUserDetails";
+import { fetchUser } from "@/Redux/slices/userSlice";
 
 function UserProfile() {
   const userInfo = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [shown, setShown] = useState(false);
+
+  const [refetchUser,setRefetchUser] = useState(false)
 
   if (userInfo.verified === false && shown === false) {
     setShown(true);
     //
   }
+  useEffect(()=>{
+    if(refetchUser === true){
+      dispatch(fetchUser());
+      setRefetchUser(false)
+      document.getElementById("Resend-btn").classList.remove("hidden");
+    }
+  },[refetchUser,dispatch])
 
   useEffect(() => {
     // const m_off = document.getElementById("user-modal-close");
@@ -153,7 +165,24 @@ function UserProfile() {
               {userInfo && userInfo.isLoggedIn ? (
                 !userInfo.verified ? (
                   <>
+                                      <button
+                      className="btn"
+                      onClick={async () => {
+                        if (refetchUser === false){
+                          setRefetchUser(true)
+                        }
+                      }}
+                    >
+                      Reload {" "}
+                      <span>
+                      <RxReload 
+                          className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </button>
                     <button
+                    id="Resend-btn"
                       className="btn"
                       onClick={async (evt) => {
                         const resend = await resendVerification();
