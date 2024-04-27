@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 
 // import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import CourseCard from "@/comp/courseCard";
 
 const AllAvailableCourses = () => {
@@ -17,7 +17,7 @@ const AllAvailableCourses = () => {
 
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const userInfo = useSelector((state) => state.user);
 
@@ -26,6 +26,7 @@ const AllAvailableCourses = () => {
       if (!checkUser) {
         dispatch(fetchUser(false));
         setCheckedUser(true);
+        dispatch(getAllCourses());
       }
       // navigate("/userError", {
       //   state: {
@@ -35,8 +36,8 @@ const AllAvailableCourses = () => {
       // return;
     }
 
-    dispatch(getAllCourses());
-  }, [dispatch, navigate, userInfo, checkUser]);
+    
+  }, [dispatch, userInfo, checkUser]);
 
   return (
     <>
