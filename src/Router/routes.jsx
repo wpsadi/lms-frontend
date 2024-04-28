@@ -1,5 +1,5 @@
 import AboutUs from "@/Pages/About";
-import ContactUs from "@/Pages/Contact";
+import ContactUs from "@/Pages/ContactUsPages/Contact";
 import ErrorPage from "@/Pages/Error404";
 import Home from "@/Pages/Home";
 import LogoutUser from "@/Pages/AuthPages/Logout";
@@ -11,6 +11,9 @@ import { Routes,Route } from "react-router-dom";
 import AllAvailableCourses from "@/Pages/CoursePages/AllAvailableCourses";
 import UserRelatedError from "@/Pages/UserRelatedError";
 import IndividualCourse from "@/Pages/CoursePages/IndividualCourse";
+import UserAuthCheck from "@/helpers/requireUserAuth";
+import AllQueries from "@/Pages/ContactUsPages/AllQueries";
+import IndividualQuery from "@/Pages/ContactUsPages/IndividualQuery";
 
 function CustomRoutes(){
     return (<>
@@ -33,6 +36,13 @@ function CustomRoutes(){
         {/* Courses Routes */}
         <Route path="/courses" element={<AllAvailableCourses/>} />
         <Route path="/courses/:courseID" element={<IndividualCourse />} />
+
+        {/* Queries Routes */}
+        <Route element={<UserAuthCheck/>} >
+            <Route path="/queries" element={<AllQueries/>} />
+            <Route path="/queries/:queryID" element={<IndividualQuery/>} />
+            {/* <Route path="/queries/:queryID" element={<IndividualQuery/>} /> */}
+        </Route>
 
 
 

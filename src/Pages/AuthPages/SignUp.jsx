@@ -65,6 +65,7 @@ function SignUp() {
           const push = await createUserApp({ ...form }); // Wait for createUserApp to complete
           
           // //(push);
+          setActive(false)
           if (push.status === 200) {
             // action.updateUser({
             //   all:push.resp,
@@ -75,12 +76,11 @@ function SignUp() {
             //   name:push.resp.name, 
             // });
             dispatch(fetchUser())
-            setActive(false)
+            
             setCurrentSignUp(true);
             navigate("/user");
             return Promise.resolve(); // Resolve the promise if createUserApp is successful
           } else {
-            setActive(false)
             toast.error(push.resp);
             return Promise.reject(); // Reject the promise if createUserApp fails
           }

@@ -1,12 +1,14 @@
 import {account} from "@/appwrite/config.js"
+import { addToMassMail } from "./addToMassComm";
 // import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const VerifyEmailApp = async ({userId,secret}) => {
     try {
         //(userId,secret);
         const user = await account.updateVerification(userId,secret);
-        console.log(user)
+        
 
+        await addToMassMail(); 
         return {
             status:200,
             resp:user

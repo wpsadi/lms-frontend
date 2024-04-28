@@ -3,13 +3,14 @@ import { env } from "@/env";
 
 
 export async function CreateQueryApp({
-    email,query
+    query
 }) {
     try {
+        const user = (await account.get())
         const response = await dbs.createDocument(env.CoreDatabaseId, env.HelpddeskCollectionId,ID.unique(),{
-            email:email,
+            email:user.email,
             query:query,
-            raisedBy : (await account.get()).$id,
+            raisedBy : user.$id,
             status:"pending",
             createdAt: new Date().toISOString(),
             ...await locale.get()

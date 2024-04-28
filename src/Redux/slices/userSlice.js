@@ -91,6 +91,7 @@ const userSlice = createSlice({
   extraReducers : (builder)=>{
 
       builder.addCase(fetchUser.fulfilled, (state, action)=>{
+        // console.log("s")
         try{
           state.firstname = action.payload.prefs.firstname;
           state.name = action.payload.name;
@@ -98,9 +99,11 @@ const userSlice = createSlice({
           state.isLoggedIn = true;
           state.all = action.payload,
           state.verified = action.payload.emailVerification;
+          // console.log(action.payload)
         }
         catch(e){
           null
+          // console.log(e);
         }
 
       })

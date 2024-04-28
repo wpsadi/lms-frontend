@@ -1,6 +1,6 @@
 import DefaultLayout from "@/Layouts/DefaultLay";
-import { logoutUser, updateUser } from "@/Redux/slices/userSlice";
-import { bindActionCreators } from "@reduxjs/toolkit";
+import { fetchUser} from "@/Redux/slices/userSlice";
+// import { bindActionCreators } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { CiCircleInfo } from "react-icons/ci";
@@ -27,7 +27,7 @@ function SignIn() {
     }
   });
   const dispatch = useDispatch();
-  const action = bindActionCreators({ updateUser, logoutUser }, dispatch);
+  // const action = bindActionCreators({ updateUser, logoutUser }, dispatch);
   async function SignIn(data) {
     const form = {
       email: data.email.toLowerCase().trim(),
@@ -48,19 +48,13 @@ function SignIn() {
         (async () => {
           const push = await LoginUserApp({ ...form }); // Wait for createUserApp to complete
           // //(push);
+          
+
           if (push.status === 200) {
             //(push.resp);
+            dispatch(fetchUser())
             
-            action.updateUser({
-              all:push.resp,
-              firstname: push.resp.resp.prefs.firstname,
-              user: push.resp.resp.email,
-              verified: push.resp.resp.emailVerification,
-              isLoggedIn: true,
-              name:push.resp.name, 
-            });
             setActive(false)
-
             //   //("h")
             navigate("/user");
             setCurrentSignIn(true);
@@ -78,11 +72,12 @@ function SignIn() {
           error: "Failed to sign up",
         }
       );
-      setActive(false)
+      // setActive(false)
     } catch (error) {
-        Promise.reject()
-        setActive(false)
-      console.error(error);
+      setActive(false)
+        return Promise.reject()
+        
+      // console.error(error);
     }
   }
 

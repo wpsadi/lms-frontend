@@ -74,7 +74,7 @@ function IndividualCourse() {
         <nav className="mb-2 ">
           <h3 className="font-mono font-bold italic underline dark:text-white">
             <nav className="flex" aria-label="Breadcrumb">
-              <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+              <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse flex-wrap">
                 <li>
                   <div className="flex items-center">
                     {/* <svg className="rtl:rotate-180 w-3 h-3 text-black mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">

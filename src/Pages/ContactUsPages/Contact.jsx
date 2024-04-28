@@ -59,7 +59,7 @@ function ContactUs() {
       if (once === false) {
 
 
-        if (loadingAllQueries === false) {
+        if (loadingAllQueries === false && userInfo.isLoggedIn) {
           toast.promise(
             (async () => {
               setLoadingAllQueries(true);
@@ -80,6 +80,7 @@ function ContactUs() {
             }
           );
         }
+        
       }
     }
 
@@ -301,7 +302,10 @@ function ContactUs() {
             {data !== null && data.total > 0 && (
               <>
                 <div className="mt-2">
-              <QueryLogTable queries = {data} reload={setOnce}/>
+                  <Link to={"/queries"}>
+                  <QueryLogTable queries = {data} reload={setOnce}/>
+                  </Link>
+             
                 </div>
               </>
             )}

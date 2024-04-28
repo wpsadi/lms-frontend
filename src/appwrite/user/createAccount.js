@@ -33,6 +33,8 @@ export async function createUserApp({
 
     await account.createVerification(env.emailVerificationURL);
 
+     
+
     // // await account.
     // const account = await account.get();
     return {
