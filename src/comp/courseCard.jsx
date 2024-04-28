@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 import courseNA from "@/assets/img_na.jpeg";
 import { purifyIt } from "@/helpers/domPurify";
-import { Link } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 
 
 function CourseCard({course}){
+  const navigate = useNavigate();
     const thumbnail = ()=>{
         return (<>
                                 <img
@@ -41,8 +42,9 @@ function CourseCard({course}){
     }
 
     return (<>
-    <Link to={`/courses/${course.$id}`}>
-    <div className="max-w-md w-3/5 cursor-pointer bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div onClick={()=>{
+      navigate(`/courses/${course.$id}`)
+    }} className="max-w-md w-3/5 cursor-pointer bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                       <a href="#">
             {thumbnail()}
                       </a>
@@ -153,7 +155,7 @@ function CourseCard({course}){
 
                       </div>
                     </div>
-    </Link>
+
 
     </>)
 }

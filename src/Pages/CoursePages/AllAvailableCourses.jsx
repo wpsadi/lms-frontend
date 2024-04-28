@@ -17,6 +17,8 @@ const AllAvailableCourses = () => {
 
   const dispatch = useDispatch();
 
+  const [once,SetOnce] = useState(false)
+
   // const navigate = useNavigate();
 
   const userInfo = useSelector((state) => state.user);
@@ -26,7 +28,6 @@ const AllAvailableCourses = () => {
       if (!checkUser) {
         dispatch(fetchUser(false));
         setCheckedUser(true);
-        dispatch(getAllCourses());
       }
       // navigate("/userError", {
       //   state: {
@@ -36,8 +37,13 @@ const AllAvailableCourses = () => {
       // return;
     }
 
+    if (once === false ) {
+      dispatch(getAllCourses());
+      SetOnce(true)
+    }
+
     
-  }, [dispatch, userInfo, checkUser]);
+  }, [dispatch, userInfo, checkUser,once]);
 
   return (
     <>
