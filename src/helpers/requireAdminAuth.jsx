@@ -47,7 +47,7 @@ function AdminAuthCheck() {
             return Promise.reject("Please Login to go Access this page");
           } else {
             setLoadingMessage("Checking Access level...");
-            console.log(userInfo.all.labels)
+            // console.log(userInfo.all.labels)
             if (userInfo.all.labels.includes("admin")) {
               setLoadingAllQueries(false);
               setIsAuthorized(true)

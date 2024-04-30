@@ -44,7 +44,7 @@ function CourseCard({course}){
     return (<>
     <div onClick={()=>{
       navigate(`/courses/${course.$id}`)
-    }} className="max-w-md w-3/5 cursor-pointer bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    }} className="max-w-md w-72 cursor-pointer bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                       <a href="#">
             {thumbnail()}
                       </a>
@@ -75,7 +75,7 @@ function CourseCard({course}){
                         </div>
                         <div className="dropdown dropdown-hover">
                           <div tabIndex={0} className=" m-1">
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-wrap">
                             {category()}
                             </div>
 
@@ -147,7 +147,7 @@ function CourseCard({course}){
                         <a
                           className="inline-flex items-center px-3 py-2 text-md font-medium text-center text-black dark:text-white rounded-lg "
                         >
-                          {course.price === 0 ? "Free" : (<>{course.currency} {course.price}</>)}
+                          {Number(course.price) === 0 ? "Free" : (<>{course.currency} {course.price}</>)}
                           
 
                         </a>

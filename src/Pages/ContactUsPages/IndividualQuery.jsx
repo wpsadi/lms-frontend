@@ -9,6 +9,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 function IndividualQuery() {
   const { queryID } = useParams();
+  const [error,setError] = useState(null);
   const loadingMessage = "trying to fetch records";
   const [isLoaded, setIsLoaded] = useState(false);
   const [data, setData] = useState({});
@@ -35,8 +36,9 @@ function IndividualQuery() {
                 return Promise.resolve("Data fetched successfully")
               } else {
                 setActive(false)
+                setError(pull.resp)
                 setLoadingAllQueries(false);
-                return Promise.reject("Failed to fetch data")
+                return Promise.reject(pull.resp)
               }
             })();  
         })(),{
@@ -47,7 +49,7 @@ function IndividualQuery() {
         })
 
     }
-  }, [isLoaded, queryID]);
+  }, [isLoaded, queryID,isActive]);
   return (
     <>
       <DefaultLayout className="">
@@ -139,6 +141,23 @@ function IndividualQuery() {
                 <div>
                   <span className="font-medium">Please be patience</span>{" "}
                   {loadingMessage}
+                </div>
+              </div>
+            </>
+          )}
+                      {error !== null  && (
+            <>
+              <div
+                className="flex items-center p-4 mb-4 mt-2 text-sm text-red-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-red-400"
+                role="alert"
+              >
+                <red
+                  className="flex-shrink-0 inline w-4 h-4 me-3 "
+                  aria-hidden="true"
+                />
+                <span className="sr-only">Failed</span>
+                <div>
+                  <span className="font-medium">{error}</span>
                 </div>
               </div>
             </>
@@ -311,6 +330,7 @@ defaultValue={(()=>{
                           <button
                             type="btn"
                             onClick={()=>{
+                              setError(null)
                                 setIsLoaded(false)
                                 isActive(true)
                             }}

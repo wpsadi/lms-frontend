@@ -4,46 +4,69 @@ import { getAllCourses } from "@/Redux/slices/courseSlice";
 import { fetchUser } from "@/Redux/slices/userSlice";
 import React, { useEffect, useState } from "react";
 
-
 // import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CourseCard from "@/comp/courseCard";
+import { AiOutlineLoading } from "react-icons/ai";
+import { MdAdminPanelSettings } from "react-icons/md";
 
 const AllAvailableCourses = () => {
+  const [showCreate, setShowCreate] = useState(false);
+
+  const loadingMessage = "trying... to load the content for you";
+  const [loadingAllQueries, setLoadingAllQueries] = useState(false);
+
   const courseData = useSelector((state) => state.course.courses);
 
-  const [checkUser, setCheckedUser] = useState(false);
+  const [shouldIcheckUser, setShouldIcheckUser] = useState(true);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
-  const [once,SetOnce] = useState(false)
+  const [once, SetOnce] = useState(false);
 
   // const navigate = useNavigate();
 
   const userInfo = useSelector((state) => state.user);
 
+  
   useEffect(() => {
-    if (!userInfo.isLoggedIn) {
-      if (!checkUser) {
-        dispatch(fetchUser(false));
-        setCheckedUser(true);
-      }
-      // navigate("/userError", {
-      //   state: {
-      //     next: "/courses",
-      //   },
-      // });
-      // return;
-    }
+    setShowCreate(false)
+    if (once === false) {
+      (async () => {
+        setLoadingAllQueries(true);
+        await dispatch(getAllCourses());
 
-    if (once === false ) {
-      dispatch(getAllCourses());
-      SetOnce(true)
+        
+        setLoadingAllQueries(false);
+      })();
+
+      
+
+
+
+        SetOnce(true);
+
+
     }
 
     
-  }, [dispatch, userInfo, checkUser,once]);
+    if (shouldIcheckUser === true){
+      (async ()=>{
+      setShouldIcheckUser(false)
+      await dispatch(fetchUser(false))
+      })()
+    }
+
+    if (userInfo.isLoggedIn && userInfo.all.labels.includes("admin")) {
+      setShowCreate(true)
+    }
+
+
+  }, [dispatch, userInfo, once, shouldIcheckUser]);
+
+
 
   return (
     <>
@@ -53,6 +76,24 @@ const AllAvailableCourses = () => {
             Courses
           </h3>
         </Link>
+        {loadingAllQueries === true && (
+          <>
+            <div
+              className="flex items-center p-4 mb-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+              role="alert"
+            >
+              <AiOutlineLoading
+                className="flex-shrink-0 inline w-4 h-4 me-3 animate-spin"
+                aria-hidden="true"
+              />
+              <span className="sr-only">Loading...</span>
+              <div>
+                <span className="font-medium">Please be patience</span>{" "}
+                {loadingMessage}
+              </div>
+            </div>
+          </>
+        )}
 
         <div
           id="sticky-banner"
@@ -115,13 +156,41 @@ const AllAvailableCourses = () => {
             </>
           )}
         </div>
+
+        {showCreate && (
+          <>
+            <div
+              className="flex items-center flex-row justify-between p-4 mt-2 text-md text-green-600 rounded-lg  bg-blue-50 dark:bg-gray-800 dark:text-green-200"
+              role="alert"
+            >
+              <div className="flex items-center">
+                <MdAdminPanelSettings
+                  className="flex-shrink-0 inline me-3 text-3xl "
+                  aria-hidden="true"
+                />
+                {/* <span className="sr-only">Hi ADMIN!</span> */}
+                <div>
+                  <span className="font-medium">
+                    Hi <u>ADMIN</u> ! Do you want to create new Course?
+                  </span>
+                </div>
+              </div>
+              <button onClick={()=>{
+                navigate("/courses-create")
+              }} className="btn bg-green-600 text-white hover:bg-green-800  active:bg-green-400">
+                Create Course
+              </button>
+            </div>
+          </>
+        )}
+
         <div>
           {courseData && courseData.total > 0 && (
-            <div className="py-5 px-4 mx-auto max-w-screen-xl lg:py-8 flex  gap-8 lg:gap-8 ">
-              <div className="flex flex-row  h-fit gap-2 ">
+            <div className="py-5 px-4 mx-auto max-w-screen-xl lg:py-4 flex  gap-8 lg:gap-4 ">
+              <div className="flex flex-row flex-wrap justify-center h-fit gap-2 ">
                 {courseData.documents.map((course, index) => (
                   <React.Fragment key={index}>
-                    <CourseCard course={course}/>
+                    <CourseCard course={course} />
                   </React.Fragment>
                 ))}
               </div>

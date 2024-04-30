@@ -8,9 +8,12 @@ import { AiOutlineLoading } from "react-icons/ai";
 import courseNA from "@/assets/img_na.jpeg";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { useSelector } from "react-redux";
-
+import Stackedit from "stackedit-js";
+// import { purifyIt } from "@/helpers/domPurify";
+import { createHTMLBlob } from "../../helpers/createHTMLBob";
 
 function IndividualCourse() {
+  const stackedit = new Stackedit();
   const userInfo = useSelector((state) => state.user);
 
   const category = () => {
@@ -45,6 +48,34 @@ function IndividualCourse() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
+    if (data) {
+      const desc = document.getElementById("desc");
+      stackedit.openFile(
+        {
+          name: "Filename",
+          content: { text: data.desc },
+        },
+        true /* silent mode */
+      );
+
+      stackedit.on("fileChange", (file) => {
+        desc.setAttribute("referrerPolicy", "same-origin");
+        desc.setAttribute(
+          "src",
+          createHTMLBlob(
+            file.content.html,
+            `
+        body{
+          font-family: 'Inter', sans-serif;
+        }
+        `
+          )
+        );
+      });
+    }
+  });
+
+  useEffect(() => {
     if (once) {
       (async () => {
         toast.promise(
@@ -53,6 +84,7 @@ function IndividualCourse() {
             setOnce(false);
             if (push.status === 200) {
               setData(push.resp);
+
               return Promise.resolve();
             } else {
               return Promise.reject();
@@ -120,7 +152,7 @@ function IndividualCourse() {
         {once === true ? (
           <>
             <div
-              className="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+              className="flex  items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
               role="alert"
             >
               <AiOutlineLoading
@@ -149,18 +181,34 @@ function IndividualCourse() {
             ) : (
               <>
                 <div className="hero min-h-screen bg-base-200">
-                  <div className="hero-content flex-col lg:flex-row-reverse">
+                  <div className="hero-content flex-col lg:flex-row-reverse ">
                     <div className="text-center lg:text-left">
                       <h1 className="text-5xl font-bold">{data.title}</h1>
-                      <div className="flex justify-start gap-2 mt-2">
+                      <div className="flex justify-start gap-2 mt-2 flex-wrap">
                         {category()}
                       </div>
-                      <p
-                        className="py-2"
-                        dangerouslySetInnerHTML={{ __html: data.desc }}
-                      ></p>
+                      <div>
+                        <a href={`#main-card`}>
+                          <button className="btn hover:bg-green-600 bg-green-600 text-white font-semibold fon-mono">
+                            Move to Purchase Option
+                          </button>
+                        </a>
+                      </div>
+                      <div className="mockup-window border bg-base-300 ">
+                        <div className="flex items-center flex-col px-4 py-2 bg-base-200">
+                          <p className="invisible h-0 ">{data.desc}</p>
+                        <iframe
+                        id="desc"
+                        className="py-2 w-full h-[500px]"
+                      ></iframe>
+                        </div>
+                      </div>
+
                     </div>
-                    <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+                    <div
+                      className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100 "
+                      id="main-card"
+                    >
                       <div className="card-body">
                         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                           <a className="bg-transparent block p-2">
@@ -230,7 +278,7 @@ function IndividualCourse() {
                             </div>
                             <div className="flex items-center justify-between">
                               <span className="text-2xl font-bold text-gray-900 dark:text-white">
-                                {data.price === 0 ? (
+                                {Number(data.price) === 0 ? (
                                   "Free"
                                 ) : (
                                   <>
@@ -247,13 +295,17 @@ function IndividualCourse() {
                             </div>
                           </div>
                           <div className="px-5 pb-3">
-                            <span className="font-bold font-mono">Course by: <span className="underline italics font-normal">{data.createdBy}</span></span>
+                            <span className="font-bold font-mono">
+                              Course by:{" "}
+                              <span className="underline italics font-normal">
+                                {data.createdBy}
+                              </span>
+                            </span>
                           </div>
                         </div>
                         <div className="form-control mt-6">
                           {userInfo.isLoggedIn === false && (
                             <>
-
                               <Link to="/signin" className="btn btn-primary">
                                 SignIn
                               </Link>
