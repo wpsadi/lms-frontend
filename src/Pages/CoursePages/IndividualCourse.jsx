@@ -59,7 +59,7 @@ function IndividualCourse() {
       );
 
       stackedit.on("fileChange", (file) => {
-        desc.setAttribute("referrerPolicy", "same-origin");
+        // desc.setAttribute("referrerPolicy", "same-origin");
         desc.setAttribute(
           "src",
           createHTMLBlob(
@@ -184,9 +184,11 @@ function IndividualCourse() {
                   <div className="hero-content flex-col lg:flex-row-reverse ">
                     <div className="text-center lg:text-left">
                       <h1 className="text-5xl font-bold">{data.title}</h1>
+                      <div className="m-0 h-0 w-0 p-0 border-[0px] "></div>
                       <div className="flex justify-start gap-2 mt-2 flex-wrap">
                         {category()}
                       </div>
+                      <div className="m-0 h-0 w-0 p-0 border-[0px] "></div>
                       <div>
                         <a href={`#main-card`}>
                           <button className="btn hover:bg-green-600 bg-green-600 text-white font-semibold fon-mono">

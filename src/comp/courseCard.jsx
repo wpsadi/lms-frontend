@@ -73,11 +73,13 @@ function CourseCard({course}){
                             <div data-popper-arrow></div>
                           </div>
                         </div>
+                        <div className="m-0 h-0 w-0 p-0 border-[0px] "></div>
                         <div className="dropdown dropdown-hover">
                           <div tabIndex={0} className=" m-1">
-                            <div className="flex gap-2 flex-wrap">
+                            <div className="flex flex-start gap-2 line-clamp-1 ">
                             {category()}
                             </div>
+
 
                           </div>
                           <div
@@ -97,6 +99,7 @@ function CourseCard({course}){
                             <div data-popper-arrow></div>
                           </div>
                         </div>
+                        <div className="m-0 h-0 w-0 p-0 border-[0px] "></div>
 
                         <div className="dropdown dropdown-hover">
                           <div tabIndex={0} className=" m-1">
@@ -121,6 +124,7 @@ function CourseCard({course}){
                             <div data-popper-arrow></div>
                           </div>
                         </div>
+                        <div className="m-0 h-0 w-0 p-0 border-[0px] "></div>
 
                         <div className="flex flex-row justify-between ">
                         <a
