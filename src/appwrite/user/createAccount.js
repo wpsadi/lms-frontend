@@ -1,5 +1,6 @@
 import {account,ID} from "@/appwrite/config.js";
 import { env } from "@/env";
+import { addToMassMail } from "./addToMassComm";
 
 export async function createUserApp({
   name,
@@ -21,7 +22,7 @@ export async function createUserApp({
     };*/
 
     //(data);
-    await account.create(ID.unique(), email, password, name);
+    const r1 = await account.create(ID.unique(), email, password, name);
     // //("bye")
      await account.createEmailPasswordSession(email, password);
     // await account.updatePhone(phone, password);
@@ -31,7 +32,11 @@ export async function createUserApp({
       raisedQuery:false
     });
 
+    await addToMassMail(r1.targets.find((item)=>item.providerType === "email")["$id"]);
+
     await account.createVerification(env.emailVerificationURL);
+
+
 
 
     // // await account.

@@ -1,23 +1,10 @@
-import {account, msg} from "@/appwrite/config.js";
+import { msg} from "@/appwrite/config.js";
 import {ID} from "appwrite"
 import { env } from "@/env.js";
 
 
-export const addToMassMail = async () => {
+export const addToMassMail = async (targetID) => {
     try {
-        const user = await account.get();
-        const targetID = (()=>{
-
-            let id = "";
-            user.targets.forEach((target) => {
-                if (target.providerType === "email") {
-                    id = target.id;
-                    return; // Exit the loop
-                }
-            });
-
-            return id
-        })()
         const response = await msg.createSubscriber(
             env.MassCommMessagingTopicId, // topicId
             ID.unique(), // subscriberId 
