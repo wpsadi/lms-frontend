@@ -1,10 +1,11 @@
 import { VerifyEmailApp } from "@/appwrite/user/verifyEmail";
 import DefaultLayout from "@/Layouts/DefaultLay";
-import { updateUser } from "@/Redux/slices/userSlice";
+import { fetchUser, updateUser } from "@/Redux/slices/userSlice";
 import { bindActionCreators } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch} from "react-redux";
+
 import { Link, useSearchParams } from "react-router-dom";
 
 function VerifyEmail() {
@@ -12,7 +13,6 @@ function VerifyEmail() {
   const dispatch = useDispatch();
   //(userInfo);
   const action = bindActionCreators({ updateUser }, dispatch);
-
   const [loading,SetLoading] = useState(false);
 
   const [credAval, setCredAval] = useState(false);
@@ -40,10 +40,9 @@ function VerifyEmail() {
               SetLoading(false);
               //console.log(push);
               if (push.status === 200) {
+                await dispatch(fetchUser());
                 setSuccess(true);
-                action.updateUser({
-                  verified: true,
-                });
+                
 
                 //return new Promise.resolve()
                  
