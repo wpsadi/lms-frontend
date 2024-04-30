@@ -13,10 +13,14 @@ function CreateCourse() {
   window.TAGIFY_DEBUG = false;
   const [isActive,setIsActive] = useState(false)
   const [loadingMessage,setLoadingMessage] = useState("making thngs ready for you...");
-  const [isCurrencyInvalid, setIsCurrencyInvalid] = useState(true);
+  const [IsInvalid, setIsInvalid] = useState(true);
   const [once, setOnce] = useState(true);
   const [loading, setLoading] = useState(false);
   const [currencies, setCurrencies] = useState([]);
+
+  const [ImageURL,setImageURL] = useState(null)
+
+  const [invalidMessage,setInvalidMessage] = useState("Invalid Currency")
 
 
 
@@ -129,8 +133,8 @@ function CreateCourse() {
                 onSubmit={async (evt) => {
                   evt.preventDefault();
 
-                  if (isCurrencyInvalid) {
-                    toast.error("Invalid Currency");
+                  if (IsInvalid) {
+                    toast.error(invalidMessage);
                     return;
                   }
 
@@ -141,6 +145,9 @@ function CreateCourse() {
                   formData.forEach((value, key) => {
                     formDataObject[key] = value;
                   });
+
+
+
 
                   if (isActive){
                     return
@@ -157,6 +164,8 @@ function CreateCourse() {
                     setLoadingMessage("making thngs ready for you...")
                     if (push.status=== 200){
                         toast.success("Course Created Successfully");
+                        setIsInvalid(true)
+                        setImageURL(null)
                         evt.target.reset()
                     }
                     else{
@@ -188,6 +197,50 @@ function CreateCourse() {
                       required
                     />
                   </div>
+                  
+                <div className={`${(()=>{
+                  if (ImageURL !== null){
+                    return "sm:col-span-1"
+                  }
+                  return "sm:col-span-2"
+                })()}`}>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" htmlFor="file_input">Upload Thumbnail</label>
+<input onChange={(evt)=>{
+    const file = evt.target.files[0];
+    const reader = new FileReader();
+
+    const dataURLtoBlob = (dataURL) => {
+      const parts = dataURL.split(';base64,');
+      const contentType = parts[0].split(':')[1];
+      const raw = window.atob(parts[1]);
+      const array = new Uint8Array(raw.length);
+      for (let i = 0; i < raw.length; i++) {
+        array[i] = raw.charCodeAt(i);
+      }
+      return new Blob([array], { type: contentType });
+    };
+
+
+    reader.onload = (e) => {
+      const blobImage = dataURLtoBlob(e.target.result);
+      const imageUrl = URL.createObjectURL(blobImage);
+      setImageURL(imageUrl)
+    }
+    reader.readAsDataURL(file);
+
+}} className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" name="thumbnail" type="file" accept="image/*" maxLength={1024}/>
+<p className="mt-1 text-sm text-gray-500 dark:text-gray-300 " id="file_input_help"> PNG, JPG or ...</p>
+
+                </div>
+
+{
+  ImageURL !== null && (<>
+  <a href={ImageURL} target="_blank"><img className="w-full rounded-lg shadow-xl dark:shadow-gray-800" src={ImageURL} alt="image description"/></a>
+  </>)
+}
+                  
+
+
                   <div className="sm:col-span-2">
                     <label
                       htmlFor="category"
@@ -217,10 +270,11 @@ function CreateCourse() {
                       onBlur={(evt) => {
                         const allCurrency = Object.keys(currencies);
                         if (allCurrency.includes(evt.target.value)) {
-                          setIsCurrencyInvalid(false);
+                          setIsInvalid(false);
                         } else {
                           toast.error("Invalid Currency");
-                          setIsCurrencyInvalid(true);
+                          setInvalidMessage("Invalid Currency")
+                          setIsInvalid(true);
                         }
                       }}
                       name="currency"

@@ -1,12 +1,40 @@
+import { ViewFileCourseBucketApp } from "@/appwrite/bucket/courses/GetView";
 import { dbs } from "@/appwrite/config";
 import { env } from "@/env";
 
 export async function GetAllCoursesApp() {
     try {
         const response = await dbs.listDocuments(env.CoreDatabaseId, env.CourseCollectionId);
+
+        const NewResponse = new Array() 
+        response.documents.forEach(async (course)=>{
+            if ((course.thumbnail === null) || (course.thumbnail.length === 0)){
+                NewResponse.push(course)
+            }
+            else{
+                try{
+                    const viewURL = await ViewFileCourseBucketApp(course.thumbnail)
+                    
+                    NewResponse.push( {
+                        ...course,
+                        thumbnail:viewURL.resp.href
+                    })
+
+                }
+                catch(e){
+                    NewResponse.push( {
+                        ...course,
+                        thumbnail:null
+                    })
+                }
+            }
+        })
         return {
             status: 200,
-            resp: response
+            resp: {
+              total:response.total,
+              documents:NewResponse  
+            }
         }
     } catch (e) {
         const message = e.message;

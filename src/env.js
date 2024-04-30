@@ -7,7 +7,7 @@ export const env = {
     CourseCollectionId : "66294625df2a410b742b",
     HelpddeskCollectionId : "662b9f9135bad4f973fe",
 
-
+    CoursesBucketId : "6630acc7003432f23de6",
 
     MassCommMessagingTopicId : "662e50a20017920cd40b"
 }

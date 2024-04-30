@@ -191,7 +191,7 @@ function IndividualCourse() {
                       <div className="m-0 h-0 w-0 p-0 border-[0px] "></div>
                       <div>
                         <a href={`#main-card`}>
-                          <button className="btn hover:bg-green-600 bg-green-600 text-white font-semibold fon-mono">
+                          <button className="btn mb-3 hover:bg-green-600 bg-green-600 text-white font-semibold fon-mono">
                             Move to Purchase Option
                           </button>
                         </a>
@@ -201,7 +201,7 @@ function IndividualCourse() {
                           <p className="invisible h-0 ">{data.desc}</p>
                         <iframe
                         id="desc"
-                        className="py-2 w-full h-[500px]"
+                        className="py-2 w-full "
                       ></iframe>
                         </div>
                       </div>

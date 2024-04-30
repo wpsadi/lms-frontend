@@ -40,7 +40,7 @@ function UserRelatedError() {
   }, [userInfo,navigate,next]);
 
   if (userInfo.isLoggedIn === true && userInfo.verified === true) {
-    console.log(userInfo.isLoggedIn,userInfo.verified)
+    // console.log(userInfo.isLoggedIn,userInfo.verified)
     return (
       <>
         <>

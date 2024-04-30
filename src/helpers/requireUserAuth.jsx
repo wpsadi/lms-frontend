@@ -42,7 +42,7 @@ function UserAuthCheck() {
         //   setOnce(false);
         
           if (userInfo.isLoggedIn === false) {
-            console.log(userInfo);
+            // console.log(userInfo);
             setLoadingAllQueries(false);
             return Promise.reject("Please Login to go Access this page");
           } else {

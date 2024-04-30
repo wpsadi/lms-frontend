@@ -234,7 +234,7 @@ function IndividualQuery() {
                                 required=""
 defaultValue={(()=>{
     const now = new Date(data.$createdAt).toLocaleString();
-    console.log(now)
+    // console.log(now)
     return now;
 })()}                                
 

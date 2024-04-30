@@ -28,8 +28,8 @@ export class currencyClass {
                 const country = availFullData.filter((country) => {
                     // console.log(country.currencies)
                     if (Object.keys(country.currencies) >1){
-
-                        console.log(Object.keys(country.currencies)[0])
+                        null
+                        // console.log(Object.keys(country.currencies)[0])
                     }
                     return Object.keys(country.currencies)[0] === currency.toUpperCase()})
                 // console.log(country)

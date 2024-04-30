@@ -7,7 +7,7 @@ export async function GetSpecificQueriesApp(queryID) {
         const toSelect = ["$id","email","status","raisedBy","$createdAt","continent","country","responded","eu","response","query"];
 
         // const userID = (await account.get())["$id"];
-        console.log(queryID);
+        // console.log(queryID);
         const response = await dbs.getDocument(env.CoreDatabaseId, env.HelpddeskCollectionId, queryID, [Query.select(toSelect)]);
         
         return {

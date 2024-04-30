@@ -37,6 +37,7 @@ const AllAvailableCourses = () => {
       (async () => {
         setLoadingAllQueries(true);
         await dispatch(getAllCourses());
+        
 
         
         setLoadingAllQueries(false);

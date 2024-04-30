@@ -158,7 +158,7 @@ function ContactUs() {
                         });
                         const push2 = await UpdateUserQueryApp(true);
 
-                        console.log(push1, push2);
+                        // console.log(push1, push2);
                         if (push2.status === 200 && push1.status === 200) {
                           
                           setOnce(false);
