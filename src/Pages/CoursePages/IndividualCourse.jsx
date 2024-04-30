@@ -67,6 +67,8 @@ function IndividualCourse() {
             `
         body{
           font-family: 'Inter', sans-serif;
+          
+          height:fit-content;
         }
         `
           )
@@ -201,7 +203,7 @@ function IndividualCourse() {
                           <p className="invisible h-0 ">{data.desc}</p>
                         <iframe
                         id="desc"
-                        className="py-2 w-full "
+                        className="py-2 w-full min-h-[20em] max-h-[500px]"
                       ></iframe>
                         </div>
                       </div>

@@ -46,6 +46,12 @@ function UserAuthCheck() {
             setLoadingAllQueries(false);
             return Promise.reject("Please Login to go Access this page");
           } else {
+            setLoadingMessage("Checking Verification...");
+            if (userInfo.verified === false){
+                setLoadingAllQueries(false);
+                return Promise.reject("Email Verification Failed");
+            
+            }
             setLoadingMessage("Checking Access level...");
             // console.log(userInfo.all.labels)
             // if (userInfo.all.labels.includes("admin")) {
@@ -75,7 +81,7 @@ function UserAuthCheck() {
     //   return <>f</>;
     } else {
         // return (<>Unauthorised</>)
-      <Navigate to="/userError" state={{ next: "/signin" }} />;
+      return <Navigate to="/userError" state={{ next: "/signin" }} />;
     }
   }
 
