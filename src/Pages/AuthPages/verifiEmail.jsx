@@ -37,23 +37,24 @@ function VerifyEmail() {
             SetLoading(true);
             try {
               const push = await VerifyEmailApp({ userId, secret });
-              SetLoading(false);
+              
               //console.log(push);
               if (push.status === 200) {
                 await dispatch(fetchUser());
                 setSuccess(true);
-                
+                SetLoading(false);
 
                 //return new Promise.resolve()
                  
               } else {
                 setSuccess(false);
+                SetLoading(false);
                 throw new Error(push.resp);
               }
             } catch (e) {
               toast.error(e.message);
               SetLoading(false);
-
+              setSuccess(false);
               return new Promise.reject(e);
             }
             
