@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { Link,  Navigate,  Outlet } from "react-router-dom";
+import { Link,  Navigate,  Outlet, useLocation } from "react-router-dom";
 
 function UserAuthCheck() {
   const [loadingMessage, setLoadingMessage] = useState(
@@ -19,9 +19,12 @@ function UserAuthCheck() {
 
   const [shouldExecutePromise, setShouldExecutePromise] = useState(false);
 
+  const location = useLocation();
   const [isAuthorized,setIsAuthorized] = useState(false)
 
   const [checkUser, setCheckUser] = useState(false);
+
+  const [shouldIRouteFurther,setShouldIRouteFurther] = useState(false)
   useEffect(() => {
     if (checkUser === false) {
       setLoadingAllQueries(true);
@@ -43,12 +46,15 @@ function UserAuthCheck() {
         
           if (userInfo.isLoggedIn === false) {
             // console.log(userInfo);
+            setShouldIRouteFurther(true)
             setLoadingAllQueries(false);
             return Promise.reject("Please Login to go Access this page");
           } else {
             setLoadingMessage("Checking Verification...");
             if (userInfo.verified === false){
+
                 setLoadingAllQueries(false);
+                setShouldIRouteFurther(true)
                 return Promise.reject("Email Verification Failed");
             
             }
@@ -57,6 +63,8 @@ function UserAuthCheck() {
             // if (userInfo.all.labels.includes("admin")) {
               setLoadingAllQueries(false);
               setIsAuthorized(true)
+              setShouldIRouteFurther(true)
+              
               return Promise.resolve("Access Authorised");
             // } 
             // else {
@@ -75,13 +83,22 @@ function UserAuthCheck() {
     }
   }, [dispatch, userInfo, once, checkUser,shouldExecutePromise]);
 
-  if (once === true && checkUser === true) {
+  const [isRedirected,setIsRedirected] = useState(false)
+  if (once === true && checkUser === true && shouldIRouteFurther === true) {
+    console.log("hi")
     if (isAuthorized) {
         return <Outlet/>
     //   return <>f</>;
     } else {
-        // return (<>Unauthorised</>)
-      return <Navigate to="/userError" state={{ next: "/signin" }} />;
+
+      console.log("hi")
+      if(isRedirected === false){
+        setIsRedirected(true)
+        return <Navigate to="/userError" state={{ next: location.pathname }} />
+      }
+      else{
+        return <Navigate to="/userError" state={{ next: "/signin" }} />
+      }
     }
   }
 

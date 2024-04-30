@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { Link,  Navigate,  Outlet } from "react-router-dom";
+import { Link,  Navigate,  Outlet, useLocation } from "react-router-dom";
 
 function AdminAuthCheck() {
   const [loadingMessage, setLoadingMessage] = useState(
@@ -20,6 +20,8 @@ function AdminAuthCheck() {
   const [shouldExecutePromise, setShouldExecutePromise] = useState(false);
 
   const [isAuthorized,setIsAuthorized] = useState(false)
+
+  const location = useLocation();
 
   const [checkUser, setCheckUser] = useState(false);
   useEffect(() => {
@@ -74,13 +76,22 @@ function AdminAuthCheck() {
     }
   }, [dispatch, userInfo, once, checkUser,shouldExecutePromise]);
 
+  const [isRedirected,setIsRedirected] = useState(false)
   if (once === true && checkUser === true) {
+    console.log("hi")
     if (isAuthorized) {
         return <Outlet/>
     //   return <>f</>;
     } else {
+      if(isRedirected === false){
+        setIsRedirected(true)
+        return <Navigate to="/userError" state={{ next: location.pathname }} />
+      }
+      else{
+        return <Navigate to="/userError" state={{ next: "/signin" }} />
+      }
         // return (<>Unauthorised</>)
-      return <Navigate to="/userError" state={{ next: "/signin" }} />;
+      // return <Navigate to="/userError" state={{ next: location.pathname }} />;
     }
   }
 
