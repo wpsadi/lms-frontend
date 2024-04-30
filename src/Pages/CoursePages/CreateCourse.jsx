@@ -23,20 +23,24 @@ function CreateCourse() {
   const desc= "Here it begins..."
 
   const stackedit = new Stackedit();
+  
+
+  useEffect(()=>{
+    if ( !loading){
+      const categoryTags = document.getElementById("categor");
+      new Tagify(categoryTags);
+    }
+
+  },[loading])
 
 
   useEffect(() => {
-    
-
-    const categoryTags = document.getElementById("category");
-    new Tagify(categoryTags);
-
 
 
     if (once) {
         setOnce(false);
       (async () => {
-        console.log("hi")
+        // console.log("hi")
         setLoading(true);
         const data = await new currencyClass().getCurrency();
         setCurrencies(data.resp);
@@ -192,11 +196,12 @@ function CreateCourse() {
                       Category
                     </label>
                     <input
-                      id="category"
+                      id="categor"
+                      autoFocus
                       name="category"
                       type="text"
                       required
-                      autoFocus
+                      
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     />
                   </div>
