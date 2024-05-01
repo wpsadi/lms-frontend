@@ -76,20 +76,15 @@ function AdminAuthCheck() {
     }
   }, [dispatch, userInfo, once, checkUser,shouldExecutePromise]);
 
-  const [isRedirected,setIsRedirected] = useState(false)
   if (once === true && checkUser === true) {
     console.log("hi")
     if (isAuthorized) {
         return <Outlet/>
     //   return <>f</>;
     } else {
-      if(isRedirected === false){
-        setIsRedirected(true)
+
         return <Navigate to="/userError" state={{ next: location.pathname }} />
-      }
-      else{
-        return <Navigate to="/userError" state={{ next: "/signin" }} />
-      }
+
         // return (<>Unauthorised</>)
       // return <Navigate to="/userError" state={{ next: location.pathname }} />;
     }
