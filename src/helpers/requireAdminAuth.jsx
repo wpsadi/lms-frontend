@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { Link,  Navigate,  Outlet, useLocation } from "react-router-dom";
+import { Link,  Navigate,  Outlet } from "react-router-dom";
 
 function AdminAuthCheck() {
   const [loadingMessage, setLoadingMessage] = useState(
@@ -20,8 +20,6 @@ function AdminAuthCheck() {
   const [shouldExecutePromise, setShouldExecutePromise] = useState(false);
 
   const [isAuthorized,setIsAuthorized] = useState(false)
-
-  const location = useLocation();
 
   const [checkUser, setCheckUser] = useState(false);
   useEffect(() => {
@@ -44,16 +42,10 @@ function AdminAuthCheck() {
         //   setOnce(false);
         
           if (userInfo.isLoggedIn === false) {
-            // console.log(userInfo);
+            console.log(userInfo);
             setLoadingAllQueries(false);
             return Promise.reject("Please Login to go Access this page");
           } else {
-            setLoadingMessage("Checking Verification...");
-            if (userInfo.verified === false){
-                setLoadingAllQueries(false);
-                return Promise.reject("Email Verification Failed");
-            
-            }
             setLoadingMessage("Checking Access level...");
             // console.log(userInfo.all.labels)
             if (userInfo.all.labels.includes("admin")) {
@@ -77,16 +69,12 @@ function AdminAuthCheck() {
   }, [dispatch, userInfo, once, checkUser,shouldExecutePromise]);
 
   if (once === true && checkUser === true) {
-    console.log("hi")
     if (isAuthorized) {
         return <Outlet/>
     //   return <>f</>;
     } else {
-
-        return <Navigate to="/userError" state={{ next: location.pathname }} />
-
         // return (<>Unauthorised</>)
-      // return <Navigate to="/userError" state={{ next: location.pathname }} />;
+      <Navigate to="/userError" state={{ next: "/signin" }} />;
     }
   }
 

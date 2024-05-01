@@ -218,8 +218,10 @@ function IndividualCourse() {
                           <a className="bg-transparent block p-2">
                             <img
                               className=" rounded-lg w-full "
-                              src={data.thumbnail ?? courseNA}
-                              alt="product image"
+                              src={(()=>{
+                                console.log(data.thumbnail)
+                                return ["",null,undefined].includes(data.thumbnail) ? courseNA : data.thumbnail
+                              })()}
                             />
                           </a>
                           <div className="px-5 pb-5">

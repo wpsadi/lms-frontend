@@ -1,5 +1,5 @@
 import DefaultLayout from "@/Layouts/DefaultLay";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Tagify from "@yaireo/tagify";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import Stackedit from "stackedit-js";
 import { CreateNewCourse } from "@/appwrite/db/course/CreateCourses";
 
-function CreateCourse() {
+function EditCourse() {
   window.TAGIFY_DEBUG = false;
   const [isActive,setIsActive] = useState(false)
   const [loadingMessage,setLoadingMessage] = useState("making thngs ready for you...");
@@ -25,6 +25,8 @@ function CreateCourse() {
 
 
   const desc= "Here it begins..."
+
+  const {courseID} = useParams();
 
   const stackedit = new Stackedit();
   
@@ -92,10 +94,10 @@ function CreateCourse() {
                       />
                     </svg>
                     <Link
-                      to={`/courses-create`}
+                      to={`/courses/${courseID}/edit`}
                       className="ms-1 font-medium text-black md:ms-2 dark:text-gray-400"
                     >
-                      Create
+                      Edit
                     </Link>
                   </div>
                 </li>
@@ -280,7 +282,6 @@ function CreateCourse() {
                       name="currency"
                       id={"currency"}
                       list={"currencyList"}
-                      autoFocus
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 placeholder:italic"
                       placeholder="Currency ..."
                       required
@@ -350,7 +351,7 @@ function CreateCourse() {
                   type="submit"
                   className="inline-flex bg-blue-500  items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
                 >
-                  Create Course
+                  Save Changes
                 </button>
               </form>
             </div>
@@ -361,4 +362,4 @@ function CreateCourse() {
   );
 }
 
-export default CreateCourse;
+export default EditCourse;
