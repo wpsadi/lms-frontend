@@ -1,10 +1,10 @@
 import { ViewFileCourseBucketApp } from "@/appwrite/bucket/courses/GetView";
-import { dbs } from "@/appwrite/config";
+import { dbs, Query } from "@/appwrite/config";
 import { env } from "@/env";
 
 export async function GetAllCoursesApp() {
     try {
-        const response = await dbs.listDocuments(env.CoreDatabaseId, env.CourseCollectionId);
+        const response = await dbs.listDocuments(env.CoreDatabaseId, env.CourseCollectionId,[Query.orderDesc('$createdAt')]);
 
         const NewResponse = new Array() 
         response.documents.forEach(async (course)=>{
