@@ -18,6 +18,8 @@ import AdminAuthCheck from "@/helpers/requireAdminAuth";
 import CreateCourse from "@/Pages/CoursePages/CreateCourse";
 import EditCourse from "@/Pages/CoursePages/editCourse";
 import DeleteCourse from "@/Pages/CoursePages/deleteCourse";
+import UpdatePassword from "@/Pages/AuthPages/updatePassword";
+import UpdateProfile from "@/Pages/AuthPages/updateUserProfile";
 // import AdminAuthCheck from "@/helpers/requireAdminAuth";
 // import CreateCourse from "@/Pages/CoursePages/CreateCourse";
 
@@ -37,6 +39,8 @@ function CustomRoutes(){
         <Route path="/user" element={<UserProfile/>} />
         <Route path="/logout" element={<LogoutUser/>} />
         <Route path="/verify" element={<VerifyEmail/>} />
+        <Route path="/user/update-password" element={<UpdatePassword/>} />
+        <Route path="/user/update-profile" element={<UpdateProfile/>} />
 
 
         {/* Courses Routes */}
