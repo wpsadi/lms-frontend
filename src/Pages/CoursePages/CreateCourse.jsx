@@ -12,7 +12,7 @@ import { CreateNewCourse } from "@/appwrite/db/course/CreateCourses";
 function CreateCourse() {
   window.TAGIFY_DEBUG = false;
   const [isActive,setIsActive] = useState(false)
-  const [loadingMessage,setLoadingMessage] = useState("making thngs ready for you...");
+  const [loadingMessage,setLoadingMessage] = useState("making things ready for you...");
   const [IsInvalid, setIsInvalid] = useState(true);
   const [once, setOnce] = useState(true);
   const [loading, setLoading] = useState(false);

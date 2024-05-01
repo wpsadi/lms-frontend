@@ -8,7 +8,7 @@ export async function GetAllCoursesApp() {
 
         const NewResponse = new Array() 
         response.documents.forEach(async (course)=>{
-            if ((course.thumbnail === null) || (course.thumbnail.length === 0)){
+            if ((course.thumbnail === null) || (course.thumbnail.length === 0 || course.thumbnail === undefined || course.thumbnail === "")){
                 NewResponse.push(course)
             }
             else{

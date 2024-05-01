@@ -1,5 +1,5 @@
 import DefaultLayout from "@/Layouts/DefaultLay";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import Tagify from "@yaireo/tagify";
 import { useEffect, useState } from "react";
@@ -7,12 +7,14 @@ import { currencyClass } from "@/helpers/currency";
 import { AiOutlineLoading } from "react-icons/ai";
 import toast from "react-hot-toast";
 import Stackedit from "stackedit-js";
-import { CreateNewCourse } from "@/appwrite/db/course/CreateCourses";
+// import { CreateNewCourse } from "@/appwrite/db/course/CreateCourses";
+import { GetSpecificCourses } from "@/appwrite/db/course/getSpecificCourse";
+import { updateCourseApp } from "@/appwrite/db/course/updateCourse";
 
 function EditCourse() {
   window.TAGIFY_DEBUG = false;
   const [isActive,setIsActive] = useState(false)
-  const [loadingMessage,setLoadingMessage] = useState("making thngs ready for you...");
+  const [loadingMessage,setLoadingMessage] = useState("making things ready for you...");
   const [IsInvalid, setIsInvalid] = useState(true);
   const [once, setOnce] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -22,13 +24,17 @@ function EditCourse() {
 
   const [invalidMessage,setInvalidMessage] = useState("Invalid Currency")
 
-
+    const navigate = useNavigate();
 
   const desc= "Here it begins..."
 
   const {courseID} = useParams();
 
+  const [courseData, setCourseData] = useState({});
+
   const stackedit = new Stackedit();
+
+  const [resetRequested,setResetRequested] = useState(false)
   
 
   useEffect(()=>{
@@ -45,16 +51,31 @@ function EditCourse() {
 
     if (once) {
         setOnce(false);
+        setLoading(true);
       (async () => {
         // console.log("hi")
-        setLoading(true);
+        
+        setLoadingMessage("Creating safe environment for you to edit the course")
+        const courseInfo = await GetSpecificCourses(courseID);
+        if (courseInfo.status === 200){
+          setCourseData(courseInfo.resp);
+          setImageURL((!resetRequested && courseInfo.resp.thumbnail) || null)
+
+        }
+        else{
+            toast.error("Error Fetching Course");
+            navigate("/courses");
+            
+        }
+        setLoadingMessage("making things ready for you...")
         const data = await new currencyClass().getCurrency();
         setCurrencies(data.resp);
+
         setLoading(false);
         
       })();
     }
-  },[once]);
+  },[once, courseID, navigate, courseData.thumbnail, resetRequested]);
 
   return (
     <>
@@ -128,7 +149,7 @@ function EditCourse() {
           {currencies.length !== 0 && (
             <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
               <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-                Create Course
+                Edit Course
               </h2>
               <form
               id="courseForm"
@@ -156,18 +177,21 @@ function EditCourse() {
                   }
                   setIsActive(true);
                   setLoading(true);
-                  setLoadingMessage("Creating Course...");
+                  setLoadingMessage("Updating Course...");
                   (async ()=>{
                     
 
-                    const push = await CreateNewCourse(formDataObject);
+                    const push = await updateCourseApp({...formDataObject,id:courseID});
+                    
                     setIsActive(false);
                     setLoading(false);
                     setLoadingMessage("making thngs ready for you...")
                     if (push.status=== 200){
-                        toast.success("Course Created Successfully");
+                        toast.success("Course Updated Successfully");
                         setIsInvalid(true)
                         setImageURL(null)
+                        setResetRequested(true)
+                        navigate("/courses")
                         evt.target.reset()
                     }
                     else{
@@ -196,6 +220,7 @@ function EditCourse() {
                       id="title"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 placeholder:italic"
                       placeholder="Name here"
+                      defaultValue={(!resetRequested && courseData.title) || ""}
                       required
                     />
                   </div>
@@ -237,7 +262,7 @@ function EditCourse() {
 
 {
   ImageURL !== null && (<>
-  <a href={ImageURL} target="_blank"><img className="w-full rounded-lg shadow-xl dark:shadow-gray-800" src={ImageURL} alt="image description"/></a>
+  <a href={ImageURL} target="_blank"><img className="w-full rounded-lg shadow-xl dark:shadow-gray-800" src={ImageURL || ""} alt="image description"/></a>
   </>)
 }
                   
@@ -255,6 +280,7 @@ function EditCourse() {
                       autoFocus
                       name="category"
                       type="text"
+                      defaultValue={(!resetRequested && courseData.category) || ""}
                       required
                       
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -281,6 +307,7 @@ function EditCourse() {
                       }}
                       name="currency"
                       id={"currency"}
+                      defaultValue={(!resetRequested && courseData.currency) || ""}
                       list={"currencyList"}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 placeholder:italic"
                       placeholder="Currency ..."
@@ -310,6 +337,7 @@ function EditCourse() {
                       name="price"
                       pattern="\d+(\.\d{1,2})?"
                       id="price"
+                        defaultValue={(!resetRequested && courseData.price) || ""}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="99"
                       required
@@ -342,7 +370,7 @@ function EditCourse() {
                             evt.target.value = file.content.text;
                           });
                       }}
-                      defaultValue={desc}   
+                      defaultValue={(!resetRequested && courseData.desc) || desc}   
                     ></textarea>
                     
                   </div>
