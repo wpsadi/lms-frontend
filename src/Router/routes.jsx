@@ -17,6 +17,7 @@ import IndividualQuery from "@/Pages/ContactUsPages/IndividualQuery";
 import AdminAuthCheck from "@/helpers/requireAdminAuth";
 import CreateCourse from "@/Pages/CoursePages/CreateCourse";
 import EditCourse from "@/Pages/CoursePages/editCourse";
+import DeleteCourse from "@/Pages/CoursePages/deleteCourse";
 // import AdminAuthCheck from "@/helpers/requireAdminAuth";
 // import CreateCourse from "@/Pages/CoursePages/CreateCourse";
 
@@ -42,6 +43,7 @@ function CustomRoutes(){
                 <Route element={<AdminAuthCheck/>} >
             <Route path="/courses-create" element={<CreateCourse/>} />
             <Route path="/courses/:courseID/edit" element={<EditCourse/>} />
+            <Route path="/courses/:courseID/delete" element={<DeleteCourse/>} />
         </Route>
         <Route path="/courses" element={<AllAvailableCourses/>} />
         <Route path="/courses/:courseID" element={<IndividualCourse />} />

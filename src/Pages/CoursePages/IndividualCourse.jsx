@@ -3,16 +3,19 @@ import DefaultLayout from "@/Layouts/DefaultLay";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { GoAlertFill } from "react-icons/go";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLoading } from "react-icons/ai";
 import courseNA from "@/assets/img_na.jpeg";
-import { MdOutlineShoppingBag } from "react-icons/md";
+import { MdAdminPanelSettings, MdOutlineShoppingBag } from "react-icons/md";
 import { useSelector } from "react-redux";
 import Stackedit from "stackedit-js";
 // import { purifyIt } from "@/helpers/domPurify";
 import { createHTMLBlob } from "../../helpers/createHTMLBob";
+import { FaEdit } from "react-icons/fa";
+import { RiDeleteBin2Fill } from "react-icons/ri";
 
 function IndividualCourse() {
+  const navigate = useNavigate();
   const stackedit = new Stackedit();
   const userInfo = useSelector((state) => state.user);
 
@@ -151,6 +154,7 @@ function IndividualCourse() {
             </nav>
           </h3>
         </nav>
+
         {once === true ? (
           <>
             <div
@@ -182,6 +186,40 @@ function IndividualCourse() {
               </>
             ) : (
               <>
+                      {userInfo.isLoggedIn && userInfo.all  && (userInfo.all.labels).length>0 && userInfo.all.labels.includes("admin") && (
+          <>
+            <div
+              className="flex items-center flex-row justify-between p-4 mt-2 text-md text-green-600 rounded-lg  bg-blue-50 dark:bg-gray-800 dark:text-green-200"
+              role="alert"
+            >
+              <div className="flex items-center">
+                <MdAdminPanelSettings
+                  className="flex-shrink-0 inline me-3 text-3xl "
+                  aria-hidden="true"
+                />
+                {/* <span className="sr-only">Hi ADMIN!</span> */}
+                <div>
+                  <span className="font-medium">
+                    Hi <u>ADMIN</u> ! Here are some actions that you can do :
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-row flex-wrap gap-2 text-lg">
+              <button onClick={()=>{
+                navigate(`/courses/${courseID}/edit`)
+              }} className="btn bg-blue-600 text-white hover:bg-blue-800  active:bg-blue-400">
+                Edit <FaEdit />
+              </button>
+              <button onClick={()=>{
+                navigate(`/courses/${courseID}/delete`)
+              }} className="btn bg-red-600 text-white hover:bg-red-800  active:bg-red-400">
+                Delete <RiDeleteBin2Fill />
+              </button>
+              </div>
+
+            </div>
+          </>
+        )}
                 <div className="hero min-h-screen bg-base-200">
                   <div className="hero-content flex-col lg:flex-row-reverse ">
                     <div className="text-center lg:text-left">
