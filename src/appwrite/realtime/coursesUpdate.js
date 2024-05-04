@@ -12,9 +12,10 @@ export class CoursesUpdate {
         //client.subscribe([`databases.${this.env.CoreDatabaseId}.collections.${this.env.CourseCollectionId}.documents.*.update`], response => {
             await client.subscribe(`databases.*.collections.*.documents.*.update`, (resp) => {    
         // Callback will be executed on changes for documents A and all files.
-            console.log(resp);
+            // console.log(resp);
             // this.dispatch(getAllCourses())
             // console.log(response);
+            return resp
         });
     }
 

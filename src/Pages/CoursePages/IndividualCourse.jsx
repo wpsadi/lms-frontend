@@ -257,7 +257,7 @@ function IndividualCourse() {
                             <img
                               className=" rounded-lg w-full "
                               src={(()=>{
-                                console.log(data.thumbnail)
+                                // console.log(data.thumbnail)
                                 return ["",null,undefined].includes(data.thumbnail) ? courseNA : data.thumbnail
                               })()}
                             />

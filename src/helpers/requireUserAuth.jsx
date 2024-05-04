@@ -83,7 +83,7 @@ function UserAuthCheck() {
   }, [dispatch, userInfo, once, checkUser,shouldExecutePromise]);
 
   if (once === true && checkUser === true && shouldIRouteFurther === true) {
-    console.log("hi")
+    // console.log("hi")
     if (isAuthorized) {
         return <Outlet/>
     //   return <>f</>;
