@@ -8,6 +8,7 @@ export const content = [
   './components/**/*.{js,jsx}',
   './app/**/*.{js,jsx}',
   './src/**/*.{js,jsx}',
+  'node_modules/flowbite-react/lib/esm/**/*.js'
 ];
 export const prefix = "";
 export const theme = {
@@ -73,6 +74,7 @@ export const theme = {
       "accordion-down": "accordion-down 0.2s ease-out",
       "accordion-up": "accordion-up 0.2s ease-out",
     },
- plugins :[tailwindcssAnimate, flowbitePlugin,daisyui]
-}
-}
+  },
+  // eslint-disable-next-line no-undef
+  plugins: [tailwindcssAnimate, flowbitePlugin, daisyui, require('flowbite/plugin')],
+};

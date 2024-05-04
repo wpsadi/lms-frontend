@@ -11,5 +11,5 @@ export const env = {
 
     MassCommMessagingTopicId : "662e50a20017920cd40b",
 
-    PasswordRecoverUser: "https://lms-nu-wheat.vercel.app/reset"
+    PasswordRecoverUser: "https://lms-nu-wheat.vercel.app/user/reset"
 }
