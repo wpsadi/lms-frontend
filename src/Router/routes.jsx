@@ -20,6 +20,7 @@ import EditCourse from "@/Pages/CoursePages/editCourse";
 import DeleteCourse from "@/Pages/CoursePages/deleteCourse";
 import UpdatePassword from "@/Pages/AuthPages/updatePassword";
 import UpdateProfile from "@/Pages/AuthPages/updateUserProfile";
+import ForgotPassword from "@/Pages/AuthPages/forgot-password";
 // import AdminAuthCheck from "@/helpers/requireAdminAuth";
 // import CreateCourse from "@/Pages/CoursePages/CreateCourse";
 
@@ -41,6 +42,7 @@ function CustomRoutes(){
         <Route path="/verify" element={<VerifyEmail/>} />
         <Route path="/user/update-password" element={<UpdatePassword/>} />
         <Route path="/user/update-profile" element={<UpdateProfile/>} />
+        <Route path="/user/forgot-password" element={<ForgotPassword/>}/>
 
 
         {/* Courses Routes */}

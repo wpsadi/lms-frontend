@@ -9,5 +9,7 @@ export const env = {
 
     CoursesBucketId : "6630acc7003432f23de6",
 
-    MassCommMessagingTopicId : "662e50a20017920cd40b"
+    MassCommMessagingTopicId : "662e50a20017920cd40b",
+
+    PasswordRecoverUser: "https://lms-nu-wheat.vercel.app/reset"
 }

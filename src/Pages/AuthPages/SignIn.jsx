@@ -167,7 +167,10 @@ function SignIn() {
                   >
                     Sign In
                   </button>
-                  <div className="text-sm font-medium text-gray-600 dark:text-white">
+                  <div onClick={()=>{
+          navigate("/user/forgot-password")
+        }} className="font-medium cursor-pointer text-blue-600 pl-1 relative top-3  dark:text-blue-500 hover:underline">Forgot Password?</div>
+                  <div className="text-sm font-medium text-gray-600 mt-0 dark:text-white">
                     <span className="flex items-center gap-2">
                       <CiCircleInfo className="inline text-xl" /> Feel Free to
                       Reach Out to Us in case of any issues.

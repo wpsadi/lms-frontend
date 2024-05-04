@@ -76,7 +76,7 @@ function NavbarF({ children }) {
                     ></path>
                   </svg>
                   <div className="pl-12 w-full  font-bold font-mono text-2xl text-black dark:text-white">
-                    {userInfo.isLoggedIn? userInfo.all.prefs.firstname : "User"}
+                    {userInfo.isLoggedIn? stringy(userInfo.all.prefs.firstname).capitalize().s : "User"}
                   </div>
                 </div>
               </Link>

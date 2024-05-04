@@ -78,14 +78,14 @@ function UpdateProfile() {
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
               Update Profile
             </h2>
-            <p className="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">
+            <div className="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">
               Make Changes to your profile
               <div className="text-sm">
               <div onClick={()=>{
           navigate("/user/update-password",{state:{referrer:"/user"}})
         }} className="font-medium cursor-pointer text-blue-600 mt-3 dark:text-blue-500 hover:underline">Update Password</div>
               </div>
-            </p>
+            </div>
             {isActive === true && (
           <>
             <div

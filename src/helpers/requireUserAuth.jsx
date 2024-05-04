@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineLoading } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { Link,  Navigate,  Outlet, useLocation } from "react-router-dom";
+import { Link,  Outlet,  useNavigate } from "react-router-dom";
 
 function UserAuthCheck() {
   const [loadingMessage, setLoadingMessage] = useState(
@@ -15,11 +15,10 @@ function UserAuthCheck() {
   const [once, setOnce] = useState(false);
   const dispatch = useDispatch();
 
-//   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [shouldExecutePromise, setShouldExecutePromise] = useState(false);
 
-  const location = useLocation();
   const [isAuthorized,setIsAuthorized] = useState(false)
 
   const [checkUser, setCheckUser] = useState(false);
@@ -83,23 +82,17 @@ function UserAuthCheck() {
     }
   }, [dispatch, userInfo, once, checkUser,shouldExecutePromise]);
 
-  const [isRedirected,setIsRedirected] = useState(false)
   if (once === true && checkUser === true && shouldIRouteFurther === true) {
     console.log("hi")
     if (isAuthorized) {
         return <Outlet/>
     //   return <>f</>;
-    } else {
-
-      console.log("hi")
-      if(isRedirected === false){
-        setIsRedirected(true)
-        return <Navigate to="/userError" state={{ next: location.pathname }} />
-      }
-      else{
-        return <Navigate to="/userError" state={{ next: "/signin" }} />
-      }
-    }
+    }  else {
+      // return (<>Unauthorised</>)
+      return navigate("/userError",{
+          state: { next: "/signin" }
+      })
+  }
   }
 
   return (

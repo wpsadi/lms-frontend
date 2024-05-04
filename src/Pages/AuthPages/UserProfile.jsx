@@ -345,11 +345,11 @@ function UserProfile() {
         <div onClick={()=>{
           navigate("/user/update-password",{state:{referrer:"/user"}})
         }} className="font-medium cursor-pointer text-blue-600 dark:text-blue-500 hover:underline">Update Password</div>
-        <div onClick={()=>{
-          navigate("/user/update-profile",{state:{referrer:"/user"}})
-        }} className="font-medium cursor-pointer text-blue-600 dark:text-blue-500 hover:underline">Edit Profile</div>
+        
 
-              </div>
+          <div onClick={()=>{
+          navigate("/user/update-profile",{state:{referrer:"/user"}})
+        }} className="font-medium cursor-pointer text-blue-600 dark:text-blue-500 hover:underline">Edit Profile</div>    </div>
             </div>
           </>
         )}
