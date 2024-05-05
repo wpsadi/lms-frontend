@@ -10,7 +10,7 @@ export async function LoginUserApp({
         await account.createEmailPasswordSession(email,password);
         // //(user)
         return {
-            status:200,
+            status:200, 
             resp:await SetUpUser()
         }
     }catch(e){

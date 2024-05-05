@@ -8,7 +8,7 @@ export const content = [
   './components/**/*.{js,jsx}',
   './app/**/*.{js,jsx}',
   './src/**/*.{js,jsx}',
-  'node_modules/flowbite-react/lib/esm/**/*.js'
+  'node_modules/flowbite/dist/**/*.js'
 ];
 export const prefix = "";
 export const theme = {
@@ -76,5 +76,5 @@ export const theme = {
     },
   },
   // eslint-disable-next-line no-undef
-  plugins: [tailwindcssAnimate, flowbitePlugin, daisyui, require('flowbite/plugin')],
+  plugins: [tailwindcssAnimate,flowbitePlugin, daisyui],
 };
