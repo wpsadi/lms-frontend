@@ -4,7 +4,7 @@ import Notice from "@/contexts/notice";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { Analytics } from "@vercel/analytics/react"
+// import { Analytics } from "@vercel/analytics/react"
 import { fetchUser } from "./Redux/slices/userSlice";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
         <Notice.Provider value={{ isShown, setIsShown }}>
           <CustomRoutes/>
           <Toaster />
-          <Analytics/>
+          {/* <Analytics/> */}
         </Notice.Provider>
       </BrowserRouter>
     </>

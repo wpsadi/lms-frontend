@@ -2,7 +2,7 @@
 import DefaultLayout from "@/Layouts/DefaultLay";
 import { getAllCourses } from "@/Redux/slices/courseSlice";
 import { fetchUser } from "@/Redux/slices/userSlice";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 // import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -190,9 +190,8 @@ const AllAvailableCourses = () => {
             <div className="py-5 px-4 mx-auto max-w-screen-xl lg:py-4 flex  gap-8 lg:gap-4 ">
               <div className="flex flex-row flex-wrap justify-center h-fit gap-2 ">
                 {courseData.documents.map((course, index) => (
-                  <React.Fragment key={index}>
-                    <CourseCard course={course} />
-                  </React.Fragment>
+             
+                    <CourseCard course={course} key={index} />
                 ))}
               </div>
             </div>

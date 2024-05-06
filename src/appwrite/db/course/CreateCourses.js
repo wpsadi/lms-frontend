@@ -18,7 +18,7 @@ export async function CreateNewCourse({
         title,
         desc,
         category:(JSON.parse(category)).map((item)=>item.value),
-        price,
+        price:Number(price).toFixed(2),
         currency,
         createdBy:(await account.get())["$id"],
         

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { GoAlertFill } from "react-icons/go";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { AiOutlineLoading } from "react-icons/ai";
+import { AiOutlineLoading, AiOutlineLoading3Quarters } from "react-icons/ai";
 import courseNA from "@/assets/img_na.jpeg";
 import { MdAdminPanelSettings, MdOutlineShoppingBag } from "react-icons/md";
 import { useSelector } from "react-redux";
@@ -13,11 +13,17 @@ import Stackedit from "stackedit-js";
 import { createHTMLBlob } from "../../helpers/createHTMLBob";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin2Fill } from "react-icons/ri";
+import { env } from "@/env";
+import axios from "axios";
 
 function IndividualCourse() {
   const navigate = useNavigate();
-  const stackedit = new Stackedit();
+
   const userInfo = useSelector((state) => state.user);
+
+  const [options, setOptions] = useState(null);
+
+  const [isActive, setActive] = useState(false);
 
   const category = () => {
     return (
@@ -53,6 +59,7 @@ function IndividualCourse() {
   useEffect(() => {
     if (data) {
       const desc = document.getElementById("desc");
+      const stackedit = new Stackedit();
       stackedit.openFile(
         {
           name: "Filename",
@@ -78,16 +85,56 @@ function IndividualCourse() {
         );
       });
     }
-  });
+  }, [data]);
+
+  const [runRazor, setRazor] = useState(false);
 
   useEffect(() => {
     if (once) {
+      setOnce(false);
       (async () => {
         toast.promise(
           (async () => {
             const push = await GetSpecificCourses(courseID);
-            setOnce(false);
+
             if (push.status === 200) {
+              // console.log("hidvubdhvb");
+              if (runRazor === false) {
+                setRazor(true);
+                // console.log("hidvubdhvb");
+                (async () => {
+                  const CallOrderData = await axios.post(
+                    env.courseCreateOrder,
+                    {
+                      courseID: courseID,
+                    }
+                  );
+                  const OrderData = await CallOrderData.data.resp;
+
+                  // console.log(CallOrderData.data.status)
+                  if (CallOrderData.data.status === true) {
+                    setOptions({
+                      key: env.rzp_key_id, // Enter the Key ID generated from the Dashboard
+                      amount: push.resp.price, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                      currency: push.resp.currency,
+                      name: "LMS - Wpsadi", //your business name
+                      description: push.resp.title,
+                      // "image": "https://example.com/your_logo",
+                      order_id: OrderData.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                      callback_url: env.coursePurchaseCallback,
+                      prefill: {
+                        //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                        name: userInfo.name, //your customer's name
+                        email: userInfo.user,
+                      },
+                      theme: {
+                        color: "#3399cc",
+                      },
+                    });
+                  }
+                })();
+              }
+
               setData(push.resp);
 
               return Promise.resolve();
@@ -103,7 +150,7 @@ function IndividualCourse() {
         );
       })();
     }
-  }, [courseID, once, data]);
+  }, [courseID, once, data, userInfo.name, userInfo.user, runRazor]);
 
   return (
     <>
@@ -186,40 +233,49 @@ function IndividualCourse() {
               </>
             ) : (
               <>
-                      {userInfo.isLoggedIn && userInfo.all  && (userInfo.all.labels).length>0 && userInfo.all.labels.includes("admin") && (
-          <>
-            <div
-              className="flex items-center flex-row justify-between p-4 mt-2 text-md text-green-600 rounded-lg  bg-blue-50 dark:bg-gray-800 dark:text-green-200"
-              role="alert"
-            >
-              <div className="flex items-center">
-                <MdAdminPanelSettings
-                  className="flex-shrink-0 inline me-3 text-3xl "
-                  aria-hidden="true"
-                />
-                {/* <span className="sr-only">Hi ADMIN!</span> */}
-                <div>
-                  <span className="font-medium">
-                    Hi <u>ADMIN</u> ! Here are some actions that you can do :
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-row flex-wrap gap-2 text-lg">
-              <button onClick={()=>{
-                navigate(`/courses/${courseID}/edit`)
-              }} className="btn bg-blue-600 text-white hover:bg-blue-800  active:bg-blue-400">
-                Edit <FaEdit />
-              </button>
-              <button onClick={()=>{
-                navigate(`/courses/${courseID}/delete`)
-              }} className="btn bg-red-600 text-white hover:bg-red-800  active:bg-red-400">
-                Delete <RiDeleteBin2Fill />
-              </button>
-              </div>
-
-            </div>
-          </>
-        )}
+                {userInfo.isLoggedIn &&
+                  userInfo.all &&
+                  userInfo.all.labels.length > 0 &&
+                  userInfo.all.labels.includes("admin") && (
+                    <>
+                      <div
+                        className="flex items-center flex-row justify-between p-4 mt-2 text-md text-green-600 rounded-lg  bg-blue-50 dark:bg-gray-800 dark:text-green-200"
+                        role="alert"
+                      >
+                        <div className="flex items-center">
+                          <MdAdminPanelSettings
+                            className="flex-shrink-0 inline me-3 text-3xl "
+                            aria-hidden="true"
+                          />
+                          {/* <span className="sr-only">Hi ADMIN!</span> */}
+                          <div>
+                            <span className="font-medium">
+                              Hi <u>ADMIN</u> ! Here are some actions that you
+                              can do :
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-row flex-wrap gap-2 text-lg">
+                          <button
+                            onClick={() => {
+                              navigate(`/courses/${courseID}/edit`);
+                            }}
+                            className="btn bg-blue-600 text-white hover:bg-blue-800  active:bg-blue-400"
+                          >
+                            Edit <FaEdit />
+                          </button>
+                          <button
+                            onClick={() => {
+                              navigate(`/courses/${courseID}/delete`);
+                            }}
+                            className="btn bg-red-600 text-white hover:bg-red-800  active:bg-red-400"
+                          >
+                            Delete <RiDeleteBin2Fill />
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 <div className="hero min-h-screen bg-base-200">
                   <div className="hero-content flex-col lg:flex-row-reverse ">
                     <div className="text-center lg:text-left">
@@ -239,13 +295,12 @@ function IndividualCourse() {
                       <div className="mockup-window border bg-base-300 ">
                         <div className="flex items-center flex-col px-4 py-2 bg-base-200">
                           <p className="invisible h-0 ">{data.desc}</p>
-                        <iframe
-                        id="desc"
-                        className="py-2 w-full min-h-[20em] max-h-[500px]"
-                      ></iframe>
+                          <iframe
+                            id="desc"
+                            className="py-2 w-full min-h-[20em] max-h-[500px]"
+                          ></iframe>
                         </div>
                       </div>
-
                     </div>
                     <div
                       className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100 "
@@ -256,9 +311,13 @@ function IndividualCourse() {
                           <a className="bg-transparent block p-2">
                             <img
                               className=" rounded-lg w-full "
-                              src={(()=>{
+                              src={(() => {
                                 // console.log(data.thumbnail)
-                                return ["",null,undefined].includes(data.thumbnail) ? courseNA : data.thumbnail
+                                return ["", null, undefined].includes(
+                                  data.thumbnail
+                                )
+                                  ? courseNA
+                                  : data.thumbnail;
                               })()}
                             />
                           </a>
@@ -330,12 +389,59 @@ function IndividualCourse() {
                                   </>
                                 )}
                               </span>
-                              <a
-                                href="#"
+                              <button
+                                onClick={(evt) => {
+                                  evt.preventDefault();
+
+                                  if (isActive) {
+                                    toast.error("Processing previous click");
+                                    return;
+                                  }
+
+                                  if (options === null) {
+                                    return;
+                                  }
+
+                                  if (userInfo.isLoggedIn === false) {
+                                    toast.error(
+                                      "Please login before purchasing the course"
+                                    );
+                                    return;
+                                  }
+
+                                  setActive(true);
+                                  // eslint-disable-next-line no-undef
+                                  const rzp1 = new Razorpay(options);
+                                  rzp1.open();
+                                  rzp1.on("payment.failed", function () {
+                                    toast.error("Payment Failed");
+                                    setActive(false);
+                                  });
+
+                                  rzp1.on("payment.success", function () {
+                                    toast.success("Payment Success");
+                                    setActive(false);
+                                  });
+
+                                  rzp1.on("modal.ondismiss", function () {
+                                    toast.success("Payment Success");
+                                    setActive(false);
+                                  });
+
+                                  setActive(false);
+                                }}
                                 className="text-white btn btn-primary bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                               >
-                                Purchase <MdOutlineShoppingBag />
-                              </a>
+                                {options === null ? (
+                                  <>
+                                    <AiOutlineLoading3Quarters className="animate-spin" />
+                                  </>
+                                ) : (
+                                  <>
+                                    Purchase <MdOutlineShoppingBag />
+                                  </>
+                                )}
+                              </button>
                             </div>
                           </div>
                           <div className="px-5 pb-3">

@@ -1,4 +1,4 @@
-import { Client, Account, ID, Databases, Locale,Query, Messaging,Storage } from "appwrite";
+import { Client, Account, ID, Databases, Locale,Query, Messaging,Storage, Functions } from "appwrite";
 import { env } from "@/env";
 
 export const client = new Client();
@@ -13,6 +13,7 @@ export const msg  = new Messaging(client);
 
 export const fileManager = new Storage(client);
 
+export const functions = new Functions(client);
 
 
 client

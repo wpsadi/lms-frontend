@@ -78,9 +78,9 @@ function CourseCard({course}){
                           userInfo.isLoggedIn && userInfo.all.labels.includes("admin") && (<>
                           <div className="m-0 h-0 w-0 p-0 border-[0px] "></div>
                                                   <div className="flex flex-row gap-2 flex-wrap justify-start">
-                                                  <Link to={`/courses/${course.$id}/delete`}><button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-lg px-5 py-2.5 text-center me-2 mb-2"><RiDeleteBin2Fill /></button></Link>
+                                                  <Link onClick={(e) => e.stopPropagation()} to={`/courses/${course.$id}/delete`}><button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-lg px-5 py-2.5 text-center me-2 mb-2"><RiDeleteBin2Fill /></button></Link>
                                                   
-<Link to={`/courses/${course.$id}/edit`}><button type="button" className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-lg px-5 py-2.5 text-center me-2 mb-2"><FaEdit /></button></Link>
+<Link onClick={(e) => e.stopPropagation()} to={`/courses/${course.$id}/edit`}><button type="button" className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-lg px-5 py-2.5 text-center me-2 mb-2"><FaEdit /></button></Link>
 
                                                   </div>
                           </>)

@@ -28,6 +28,7 @@ export const getAllCourses = createAsyncThunk("course/all",async (raiseToast=tru
     }
 })
 
+
 const initialState = {
     courses:new Object()
 }
