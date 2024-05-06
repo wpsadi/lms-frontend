@@ -14,8 +14,8 @@ export const env = {
     PasswordRecoverUser: "https://lms-nu-wheat.vercel.app/user/reset",
 
     rzp_key_id:"rzp_test_XTpN1bstVvUals",
-    coursePurchaseCallback:"http://6637be25adc69640c491.appwrite.global/",
-    courseCreateOrder:"http://localhost:3000/razor/create/",
+    coursePurchaseCallback:"https://lms-backend-0t17.onrender.com/razor/callback",
+    courseCreateOrder:"https://lms-backend-0t17.onrender.com/razor/create",
 
     createOrderId : "6637f282003373551d3f"
 }
