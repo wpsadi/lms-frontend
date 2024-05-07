@@ -14,7 +14,7 @@ import { createHTMLBlob } from "../../helpers/createHTMLBob";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { env } from "@/env";
-import axios from "axios";
+import { createOrder } from "@/helpers/createOrder";
 
 function IndividualCourse() {
   const navigate = useNavigate();
@@ -103,16 +103,12 @@ function IndividualCourse() {
                 setRazor(true);
                 // console.log("hidvubdhvb");
                 (async () => {
-                  const CallOrderData = await axios.post(
-                    env.courseCreateOrder,
-                    {
-                      courseID: courseID,
-                    }
-                  );
-                  const OrderData = await CallOrderData.data.resp;
+                  const CallOrderData = await createOrder(courseID)
+                  const OrderData = await CallOrderData.resp.resp;
+                  console.log(CallOrderData,OrderData)
 
                   // console.log(CallOrderData.data.status)
-                  if (CallOrderData.data.status === true) {
+                  if (CallOrderData.status === 200) {
                     setOptions({
                       key: env.rzp_key_id, // Enter the Key ID generated from the Dashboard
                       amount: push.resp.price, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -131,6 +127,11 @@ function IndividualCourse() {
                         color: "#3399cc",
                       },
                     });
+                  }
+                  else{
+                    setOptions({
+                      resp:"not found"
+                    })
                   }
                 })();
               }
@@ -406,6 +407,11 @@ function IndividualCourse() {
                                     toast.error(
                                       "Please login before purchasing the course"
                                     );
+                                    return;
+                                  }
+
+                                  if (!userInfo.verified){
+                                    toast.error("Please verify your email before purchasing the course")
                                     return;
                                   }
 

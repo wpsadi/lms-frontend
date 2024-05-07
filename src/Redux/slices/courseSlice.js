@@ -28,6 +28,32 @@ export const getAllCourses = createAsyncThunk("course/all",async (raiseToast=tru
     }
 })
 
+export const getUserPurchasedCourses = createAsyncThunk("cource/purchased",async(raiseToast=true)=>{
+    try{
+        const allCourses = await GetAllCoursesApp();
+        if(raiseToast){
+            toast.promise((async () => {
+                if(allCourses.status === 200){
+                    Promise.resolve()
+                }else{
+                    throw new Error(allCourses.resp)
+                }
+              })(),{
+                loading: 'Loading...',
+                success: 'Courses Loaded',
+                error: 'Failed to load courses'
+              
+              })
+        }
+
+
+          return allCourses.resp;
+
+    }catch(e){
+        toast.error(e.message)
+    }
+})
+
 
 const initialState = {
     courses:new Object()
