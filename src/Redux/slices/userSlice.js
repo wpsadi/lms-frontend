@@ -1,3 +1,4 @@
+import { GetAllUserPurchases } from "@/appwrite/payments/getAllUserPurchases";
 import { SetUpUser } from "@/appwrite/user/getUserDetails";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
@@ -32,12 +33,40 @@ export const fetchUser = createAsyncThunk("user/get",async (raiseToast = true)=>
 }
 })
 
+export const getUserPurchasedCourses = createAsyncThunk("user/purchased",async(raiseToast=true)=>{
+  try{
+      const allPurchases = await GetAllUserPurchases();
+      if(raiseToast){
+          toast.promise((async () => {
+              if(allPurchases.status === 200){
+                  Promise.resolve()
+              }else{
+                  throw new Error(allPurchases.resp)
+              }
+            })(),{
+              loading: 'Loading...',
+              success: 'Purchases Loaded',
+              error: 'Failed to load Purchase History'
+            
+            })
+      }
+
+
+        return allPurchases.resp;
+
+  }catch(e){
+      toast.error(e.message)
+  }
+})
+
+
 const initialState = {
   user: null,
   name:null,
   isLoggedIn: false,
   verified: null,  
   firstname:null,
+  purchases: null,
   all:new Object()
 };
 
@@ -108,6 +137,13 @@ const userSlice = createSlice({
           // console.log(e);
         }
 
+      })
+
+
+
+      builder.addCase(getUserPurchasedCourses.fulfilled,(state,action)=>{
+        state.purchases = action.payload;
+      
       })
     
 

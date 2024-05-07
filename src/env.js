@@ -6,6 +6,8 @@ export const env = {
     CoreDatabaseId : "6629461c7c94afb00c05",
     CourseCollectionId : "66294625df2a410b742b",
     HelpddeskCollectionId : "662b9f9135bad4f973fe",
+    paymentsCollectionId : "6639bd92002b9be3dd81",
+
 
     CoursesBucketId : "6630acc7003432f23de6",
 
@@ -15,7 +17,7 @@ export const env = {
 
     rzp_key_id:"rzp_test_XTpN1bstVvUals",
     coursePurchaseCallback:"https://lms-backend-v6v3.onrender.com/razor/callback",
-    callbackURL: "http://localhost:5173/signin",
+    callbackURL: "https://lms-nu-wheat.vercel.app/signin",
     courseCreateOrder:"https://lms-backend-v6v3.onrender.com/razor/create",
 
     createOrderId : "6637f282003373551d3f"

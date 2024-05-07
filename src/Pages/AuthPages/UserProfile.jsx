@@ -12,9 +12,12 @@ import { IoMdMail } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { resendVerification } from "@/appwrite/user/createVerification";
 import { SetUpUser } from "@/appwrite/user/getUserDetails";
-import { fetchUser } from "@/Redux/slices/userSlice";
+import { fetchUser, getUserPurchasedCourses } from "@/Redux/slices/userSlice";
+import PurchaseLogTable from "@/comp/purchaseLog";
+import { AiOutlineLoading } from "react-icons/ai";
 
 function UserProfile() {
+  const loadingMessage = "Loading Payment History"
   const userInfo = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -27,6 +30,26 @@ function UserProfile() {
     setShown(true);
     //
   }
+
+
+  const [payData,setPayData] = useState(null)
+  const [payRecord,setPayRecord] = useState(false)
+useEffect(()=>{
+  
+  if (userInfo.isLoggedIn === true && payRecord === false){
+    setPayData(null)
+    setPayRecord(true);
+    (async ()=>{
+      await dispatch(getUserPurchasedCourses(true));
+      console.log(userInfo.purchases)
+
+      setPayData(userInfo.purchases)
+      
+    })()
+  }
+},[userInfo.isLoggedIn,payRecord,dispatch,userInfo.purchases])
+
+
   useEffect(()=>{
     if(refetchUser === true){
       dispatch(fetchUser());
@@ -358,6 +381,38 @@ function UserProfile() {
             </div>
           </>
         )}
+
+{payData === null && (
+          <>
+            <div
+              className="flex items-center p-4 mb-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+              role="alert"
+            >
+              <AiOutlineLoading
+                className="flex-shrink-0 inline w-4 h-4 me-3 animate-spin"
+                aria-hidden="true"
+              />
+              <span className="sr-only">Loading...</span>
+              <div>
+                <span className="font-medium">Please be patience</span>{" "}
+                {loadingMessage}
+              </div>
+            </div>
+          </>
+        )}
+
+        {
+          userInfo && userInfo.isLoggedIn && payData && userInfo.purchases && userInfo.purchases.total > 0 &&  (<>
+                          <div className="mt-2">
+                            
+                  <PurchaseLogTable queries ={userInfo.purchases} reload={setPayRecord}/>
+             
+                </div>
+          </>)
+        }
+  
+        <>
+        </>
 
 
       </DefaultLayout>
