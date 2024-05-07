@@ -32,18 +32,18 @@ function UserProfile() {
   }
 
 
-  const [payData,setPayData] = useState(null)
   const [payRecord,setPayRecord] = useState(false)
+  const [isRecordLoading,setIsRecordLoading] = useState(false)
 useEffect(()=>{
   
   if (userInfo.isLoggedIn === true && payRecord === false){
-    setPayData(null)
+
+    setIsRecordLoading(true)
     setPayRecord(true);
     (async ()=>{
       await dispatch(getUserPurchasedCourses(true));
       console.log(userInfo.purchases)
-
-      setPayData(userInfo.purchases)
+      setIsRecordLoading(false)
       
     })()
   }
@@ -73,6 +73,7 @@ useEffect(()=>{
       document.getElementById("userModalClose").click();
     }
   }, [userInfo]);
+
 
   const [loading, setLoading] = useState(false);
   const [success,setSuccess] = useState(false);
@@ -382,7 +383,7 @@ useEffect(()=>{
           </>
         )}
 
-{payData === null && (
+{isRecordLoading && (
           <>
             <div
               className="flex items-center p-4 mb-4 mt-2 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
@@ -402,7 +403,7 @@ useEffect(()=>{
         )}
 
         {
-          userInfo && userInfo.isLoggedIn && payData && userInfo.purchases && userInfo.purchases.total > 0 &&  (<>
+          userInfo && userInfo.isLoggedIn && !isRecordLoading && userInfo.purchases && userInfo.purchases.total > 0 &&  (<>
                           <div className="mt-2">
                             
                   <PurchaseLogTable queries ={userInfo.purchases} reload={setPayRecord}/>
