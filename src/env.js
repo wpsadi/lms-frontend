@@ -18,7 +18,7 @@ export const env = {
 
     rzp_key_id:"rzp_test_XTpN1bstVvUals",
     coursePurchaseCallback:"https://lms-backend-v6v3.onrender.com/razor/callback",
-    callbackURL: "https://lms-backend-v6v3.onrender.com/signin",
+    callbackURL: "https://lms-nu-wheat.vercel.app/signin",
     courseCreateOrder:"https://lms-backend-v6v3.onrender.com/razor/create",
 
 
