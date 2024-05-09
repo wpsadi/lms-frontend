@@ -9,7 +9,8 @@ export const getAllCourses = createAsyncThunk("course/all",async (raiseToast=tru
             toast.promise((async () => {
                 if(allCourses.status === 200){
                     Promise.resolve()
-                }else{
+                }
+                else{
                     throw new Error(allCourses.resp)
                 }
               })(),{

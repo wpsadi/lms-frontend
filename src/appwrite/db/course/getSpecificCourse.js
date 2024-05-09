@@ -9,7 +9,8 @@ export async function GetSpecificCourses(SearchCourseID) {
 
         const newRes = await (async ()=>{
             const fileID = response.thumbnail;
-            if ((fileID.length!== 0) && (fileID !== null)){
+            // console.log(response)
+            if ((fileID !== null) && (fileID.length!== 0) ){
                 const urlObj = await ViewFileCourseBucketApp(fileID);
                 const url = urlObj.resp.href
                 return {

@@ -22,6 +22,11 @@ import UpdatePassword from "@/Pages/AuthPages/updatePassword";
 import UpdateProfile from "@/Pages/AuthPages/updateUserProfile";
 import ForgotPassword from "@/Pages/AuthPages/forgot-password";
 import ResetPassword from "@/Pages/AuthPages/Reset-password";
+import LecturePage from "@/Pages/Lectures/lecturePage";
+import UserPaymentCheck from "@/helpers/requirePayment";
+import CreateLecture from "@/Pages/Lectures/createLecture";
+import DeleteLecture from "@/Pages/Lectures/deleteLecture";
+import EditLecture from "@/Pages/Lectures/editLecture";
 // import AdminAuthCheck from "@/helpers/requireAdminAuth";
 // import CreateCourse from "@/Pages/CoursePages/CreateCourse";
 
@@ -55,6 +60,15 @@ function CustomRoutes(){
         </Route>
         <Route path="/courses" element={<AllAvailableCourses/>} />
         <Route path="/courses/:courseID" element={<IndividualCourse />} />
+
+
+        {/* Lecture */}
+        <Route element={<UserPaymentCheck/>} >
+            <Route path="/learn/:courseID" element={<LecturePage/>} />
+            <Route path="/learn/:courseID/new" element={<CreateLecture/>} />
+            <Route path="/learn/:courseID/:LectureID/edit" element={<EditLecture/>} />
+            <Route path="/learn/:courseID/:LectureID/delete" element={<DeleteLecture/>} />
+        </Route>
 
 
 

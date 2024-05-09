@@ -7,7 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLoading, AiOutlineLoading3Quarters } from "react-icons/ai";
 import courseNA from "@/assets/img_na.jpeg";
 import { MdAdminPanelSettings, MdOutlineShoppingBag } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Stackedit from "stackedit-js";
 // import { purifyIt } from "@/helpers/domPurify";
 import { createHTMLBlob } from "../../helpers/createHTMLBob";
@@ -15,15 +15,21 @@ import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import { env } from "@/env";
 import { createOrder } from "@/helpers/createOrder";
+import { dbs, ID } from "@/appwrite/config";
+import { getUserPurchasedCourses } from "@/Redux/slices/userSlice";
 
 function IndividualCourse() {
   const navigate = useNavigate();
+  const [hidePurchase,setHidePurchase] = useState(false) 
 
   const userInfo = useSelector((state) => state.user);
 
   const [options, setOptions] = useState(null);
 
   const [isActive, setActive] = useState(false);
+
+  const [isPurchased, setIsPurchased] = useState(true);
+  const dispatch = useDispatch();
 
   const category = () => {
     return (
@@ -98,17 +104,17 @@ function IndividualCourse() {
             const push = await GetSpecificCourses(courseID);
 
             if (push.status === 200) {
-              // console.log("hidvubdhvb");
+              console.log("hidvubdhvb");
               if (runRazor === false) {
                 setRazor(true);
-                // console.log("hidvubdhvb");
-                (async () => {
-                  const CallOrderData = await createOrder(courseID)
+                console.log("hidvubdhvb");
+                (async () => { 
+                  const CallOrderData = await createOrder(courseID,setHidePurchase);
                   const OrderData = await CallOrderData.resp.resp;
-                  console.log(CallOrderData,OrderData)
 
                   // console.log(CallOrderData.data.status)
                   if (CallOrderData.status === 200) {
+                    setIsPurchased(false);
                     setOptions({
                       key: env.rzp_key_id, // Enter the Key ID generated from the Dashboard
                       amount: push.resp.price, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -127,11 +133,10 @@ function IndividualCourse() {
                         color: "#3399cc",
                       },
                     });
-                  }
-                  else{
+                  } else {
                     setOptions({
-                      resp:"not found"
-                    })
+                      resp: "not found",
+                    });
                   }
                 })();
               }
@@ -140,6 +145,7 @@ function IndividualCourse() {
 
               return Promise.resolve();
             } else {
+              console.log(push)
               return Promise.reject();
             }
           })(),
@@ -390,64 +396,176 @@ function IndividualCourse() {
                                   </>
                                 )}
                               </span>
-                              <button
-                                onClick={(evt) => {
-                                  evt.preventDefault();
-
-                                  if (isActive) {
-                                    toast.error("Processing previous click");
-                                    return;
-                                  }
-
-                                  if (options === null) {
-                                    return;
-                                  }
-
-                                  if (userInfo.isLoggedIn === false) {
-                                    toast.error(
-                                      "Please login before purchasing the course"
-                                    );
-                                    return;
-                                  }
-
-                                  if (!userInfo.verified){
-                                    toast.error("Please verify your email before purchasing the course")
-                                    return;
-                                  }
-
-                                  setActive(true);
-                                  // eslint-disable-next-line no-undef
-                                  const rzp1 = new Razorpay(options);
-                                  rzp1.open();
-                                  rzp1.on("payment.failed", function () {
-                                    toast.error("Payment Failed");
-                                    setActive(false);
-                                  });
-
-                                  rzp1.on("payment.success", function () {
-                                    toast.success("Payment Success");
-                                    setActive(false);
-                                  });
-
-                                  rzp1.on("modal.ondismiss", function () {
-                                    toast.success("Payment Success");
-                                    setActive(false);
-                                  });
-
-                                  setActive(false);
-                                }}
-                                className="text-white btn btn-primary bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                              >
-                                {options === null ? (
+                              {userInfo.isLoggedIn &&
+                                userInfo.verified &&
+                                isPurchased && options!=null &&(
                                   <>
-                                    <AiOutlineLoading3Quarters className="animate-spin" />
-                                  </>
-                                ) : (
-                                  <>
-                                    Purchase <MdOutlineShoppingBag />
+                                    <button
+                                      onClick={(evt) => {
+
+                                        evt.preventDefault();
+
+                                        if (userInfo.isLoggedIn === false) {
+                                          toast.error(
+                                            "Please login before purchasing the course"
+                                          );
+                                          return;
+                                        }
+
+                                        if (!userInfo.verified) {
+                                          toast.error(
+                                            "Please verify your email before purchasing the course"
+                                          );
+                                          return;
+                                        }
+
+                                        if (!isPurchased) {
+                                          toast.error(
+                                            "Please Purchase this course"
+                                          );
+                                          setActive(false);
+                                          return;
+                                        }
+
+                                        navigate(`/learn/${data.$id}`);
+                                      }}
+                                      className="text-white btn btn-primary bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    >
+                                      Watch Lectures
+                                    </button>
                                   </>
                                 )}
-                              </button>
+                              {!hidePurchase && (
+                                <>
+                                  <button
+                                    onClick={(evt) => {
+                                      evt.preventDefault();
+
+                                      if (isActive) {
+                                        toast.error(
+                                          "Processing previous click"
+                                        );
+                                        return;
+                                      }
+
+                                      if (options === null) {
+                                        return;
+                                      }
+
+                                      if (userInfo.isLoggedIn === false) {
+                                        toast.error(
+                                          "Please login before purchasing the course"
+                                        );
+                                        return;
+                                      }
+
+                                      if (!userInfo.verified) {
+                                        toast.error(
+                                          "Please verify your email before purchasing the course"
+                                        );
+                                        return;
+                                      }
+
+                                      setActive(true);
+                                      // eslint-disable-next-line no-undef
+                                      if (Number(data.price) == 0) {
+                                        const purchasedCourse = (() => {
+                                          const res = new Array();
+                                          const orders =
+                                            userInfo.purchases.documents;
+                                          orders.forEach((item) => {
+                                            if (item.payment == "done") {
+                                              res.push(item.courses.id);
+                                            }
+                                          });
+
+                                          // userInfo.purchased.documents.forEach((doc)=>{
+                                          //   res.push(doc.courses.id)
+                                          // })
+                                          return res;
+                                        })();
+                                        if (
+                                          !purchasedCourse.includes(data.$id)
+                                        ) {
+                                          (() => {
+                                            toast.promise(
+                                              dbs.createDocument(
+                                                env.CoreDatabaseId,
+                                                env.paymentsCollectionId,
+                                                ID.unique(),
+                                                {
+                                                  order_id: "FREE",
+                                                  userID: userInfo.all.$id,
+                                                  email: userInfo.all.email,
+                                                  payment: "done",
+                                                  courses: data.$id,
+                                                }
+                                              ),
+                                              {
+                                                loading: "Processing...",
+                                                success: "Course Purchased",
+                                                error:
+                                                  "Failed to purchase course",
+                                              }
+                                            );
+                                            dispatch(
+                                              getUserPurchasedCourses(false)
+                                            );
+                                            setActive(false);
+                                          })();
+                                        } else {
+                                          toast.error(
+                                            "You have already purchased this course"
+                                          );
+                                          setActive(false);
+                                          return;
+                                        }
+
+                                        return;
+                                      }
+
+                                      if (isPurchased) {
+                                        toast.error(
+                                          "You have already purchased this course"
+                                        );
+                                        setActive(false);
+                                        return;
+                                      }
+
+                                      // eslint-disable-next-line no-undef
+                                      const rzp1 = new Razorpay(options);
+                                      rzp1.open();
+                                      rzp1.on("payment.failed", function () {
+                                        toast.error("Payment Failed");
+                                        setActive(false);
+                                      });
+
+                                      rzp1.on("payment.success", function () {
+                                        toast.success("Payment Success");
+                                        setActive(false);
+                                      });
+
+                                      rzp1.on("modal.ondismiss", function () {
+                                        toast.success("Payment Success");
+                                        setActive(false);
+                                      });
+
+                                      setActive(false);
+                                    }}
+                                    className="text-white btn btn-primary bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                  >
+                                    {options === null ? (
+                                      <>
+                                        <AiOutlineLoading3Quarters className="animate-spin" />
+                                      </>
+                                    ) : (
+                                      <>
+                                        Purchase <MdOutlineShoppingBag />
+                                      </>
+                                    )}
+                                  </button>
+                                </>
+                              )}
                             </div>
                           </div>
                           <div className="px-5 pb-3">

@@ -27,7 +27,7 @@ const response = await dbs.listDocuments(env.CoreDatabaseId, env.paymentsCollect
         }
         )()
 
-        console.log(result)
+        // console.log(result)
         return {
             status: 200,
 
