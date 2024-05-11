@@ -41,7 +41,7 @@ const respons = await dbs.listDocuments(env.CoreDatabaseId, env.paymentsCollecti
         //(response)   
         return {
             status: 200,
-            resp: response.data
+            resp: await response.data
         }
     } catch (e) {
         const message = e.message;
