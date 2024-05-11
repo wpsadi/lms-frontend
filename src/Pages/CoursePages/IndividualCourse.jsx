@@ -20,7 +20,6 @@ import { getUserPurchasedCourses } from "@/Redux/slices/userSlice";
 
 function IndividualCourse() {
   const navigate = useNavigate();
-  const [pur,isPur] =  useState(false)
   const [hidePurchase,setHidePurchase] = useState(false) 
 
   const userInfo = useSelector((state) => state.user);
@@ -439,7 +438,7 @@ function IndividualCourse() {
                               {!hidePurchase && (
                                 <>
                                   <button
-                                    onClick={async (evt) => {
+                                    onClick={(evt) => {
                                       evt.preventDefault();
 
                                       if (isActive) {
@@ -467,22 +466,13 @@ function IndividualCourse() {
                                         return;
                                       }
 
-                                      if (pur){
-                                        toast.error("You have already purchased this course")
-                                        return
-                                      
-                                      }
-
                                       setActive(true);
                                       // eslint-disable-next-line no-undef
                                       if (Number(data.price) == 0) {
-                                        // console.log("hi")
-                                        const purchasedCourse = (async () => {
-                                          await dispatch(getUserPurchasedCourses(false))
-                                          // console.log(userInfo)
-                                          const res = [];
-                                          const orders =userInfo.purchases?.documents || [];
-                                          // console.log(res)
+                                        const purchasedCourse = (() => {
+                                          const res = new Array();
+                                          const orders =
+                                            userInfo.purchases.documents;
                                           orders.forEach((item) => {
                                             if (item.payment == "done") {
                                               res.push(item.courses.id);
@@ -492,14 +482,10 @@ function IndividualCourse() {
                                           // userInfo.purchased.documents.forEach((doc)=>{
                                           //   res.push(doc.courses.id)
                                           // })
-                                          // console.log(res)
                                           return res;
                                         })();
-
-                                        // console.log(await purchasedCourse)
-
                                         if (
-                                          !(await purchasedCourse).includes(data.$id)
+                                          !purchasedCourse.includes(data.$id)
                                         ) {
                                           (() => {
                                             toast.promise(
@@ -526,7 +512,6 @@ function IndividualCourse() {
                                               getUserPurchasedCourses(false)
                                             );
                                             setActive(false);
-                                            
                                           })();
                                         } else {
                                           toast.error(
@@ -538,8 +523,6 @@ function IndividualCourse() {
 
                                         return;
                                       }
-
-                                      isPur(isPurchased)
 
                                       if (isPurchased) {
                                         toast.error(
