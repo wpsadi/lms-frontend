@@ -17,13 +17,13 @@ export const env = {
     PasswordRecoverUser: "https://lms-nu-wheat.vercel.app/user/reset",
 
     rzp_key_id:"rzp_test_XTpN1bstVvUals",
-    coursePurchaseCallback:"https://lms-backend-v6v3.onrender.com/razor/callback",
+    coursePurchaseCallback:"https://lms-backend-green.vercel.app/razor/callback",
     callbackURL: "https://lms-nu-wheat.vercel.app/signin",
-    courseCreateOrder:"https://lms-backend-v6v3.onrender.com/razor/create",
+    courseCreateOrder:"https://lms-backend-green.vercel.app/razor/create",
 
 
     letureUploadURL:"https://lms-backend-v6v3.onrender.com/upload",
-    lectureDeleteURL : "https://lms-backend-v6v3.onrender.com/delete"
+    lectureDeleteURL : "https://lms-backend-green.vercel.app/delete"
 
 
 }
